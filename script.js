@@ -1,10 +1,11 @@
 "use strict";
 /* =========================================================
    HANFANDA — Peta Globe + Warna Bendera + Filter Negara
+   Tema: Hitam • Cerah • Hujan (efek hujan lembut)
    Stabil + fallback jika GeoJSON gagal dimuat.
    ========================================================= */
 
-/* Dataset hewan — sudah menyertakan daftar negara (ISO2) untuk filter */
+/* Dataset hewan — menyertakan daftar negara (ISO2) untuk filter */
 const animals = [
   { id:"harimau", emoji:"🐯", name:"Harimau", latin:"Panthera tigris",
     habitat:"Hutan hujan, sabana, lahan basah Asia", diet:"Karnivora (rusa, babi hutan, kerbau muda)",
@@ -160,7 +161,7 @@ const animals = [
   }
 ];
 
-/* ====== Pemetaan nama negara (IDN) dan warna bendera ====== */
+/* ====== Negara & Warna bendera ====== */
 const COUNTRY_NAMES = {
   IN:"India", RU:"Rusia", ID:"Indonesia", BD:"Bangladesh", NP:"Nepal", MM:"Myanmar", TH:"Thailand", LA:"Laos", KH:"Kamboja", VN:"Vietnam", CN:"Tiongkok",
   KE:"Kenya", TZ:"Tanzania", UG:"Uganda", ZA:"Afrika Selatan", BW:"Botswana", NA:"Namibia", ZM:"Zambia", MZ:"Mozambik",
@@ -184,16 +185,13 @@ const FLAG_COLORS = {
   SA:["#006C35","#FFFFFF"], AE:["#FF0000","#00732F","#000000","#FFFFFF"], OM:["#C8102E","#FFFFFF","#007A3D"],
   DZ:["#006233","#FFFFFF","#D21034"], MR:["#006233","#FFD700"], EG:["#CE1126","#FFFFFF","#000000"]
 };
-
-/* ====== Aliases nama (EN) -> ISO2 agar robust pada berbagai dataset ====== */
 const NAME_ALIASES = {
-  "india":"IN", "russia":"RU", "russian federation":"RU", "indonesia":"ID", "bangladesh":"BD", "nepal":"NP", "myanmar":"MM",
-  "thailand":"TH", "laos":"LA", "lao pdr":"LA", "lao people's democratic republic":"LA", "cambodia":"KH", "viet nam":"VN", "vietnam":"VN", "china":"CN",
-  "kenya":"KE", "tanzania":"TZ", "united republic of tanzania":"TZ", "uganda":"UG", "south africa":"ZA", "botswana":"BW", "namibia":"NA",
-  "zambia":"ZM", "mozambique":"MZ", "sri lanka":"LK", "malaysia":"MY", "australia":"AU", "japan":"JP", "united kingdom":"GB", "great britain":"GB",
-  "france":"FR", "germany":"DE", "poland":"PL", "norway":"NO", "sweden":"SE", "finland":"FI",
-  "united states of america":"US", "united states":"US", "usa":"US", "canada":"CA",
-  "saudi arabia":"SA", "united arab emirates":"AE", "oman":"OM", "algeria":"DZ", "mauritania":"MR", "egypt":"EG"
+  "india":"IN","russia":"RU","russian federation":"RU","indonesia":"ID","bangladesh":"BD","nepal":"NP","myanmar":"MM",
+  "thailand":"TH","laos":"LA","lao pdr":"LA","lao people's democratic republic":"LA","cambodia":"KH","viet nam":"VN","vietnam":"VN","china":"CN",
+  "kenya":"KE","tanzania":"TZ","united republic of tanzania":"TZ","uganda":"UG","south africa":"ZA","botswana":"BW","namibia":"NA",
+  "zambia":"ZM","mozambique":"MZ","sri lanka":"LK","malaysia":"MY","australia":"AU","japan":"JP","united kingdom":"GB","great britain":"GB",
+  "france":"FR","germany":"DE","poland":"PL","norway":"NO","sweden":"SE","finland":"FI","united states of america":"US","united states":"US","usa":"US","canada":"CA",
+  "saudi arabia":"SA","united arab emirates":"AE","oman":"OM","algeria":"DZ","mauritania":"MR","egypt":"EG"
 };
 
 /* ====== Elemen ====== */
@@ -203,7 +201,15 @@ const els = {
   sort: q("#sort"),
   density: q("#density"),
   empty: q("#empty"),
-  clearSearch: q("#clearSearch"),
+  clearSearchBtn: q("#clearSearch"),
+  resultCount: q("#resultCount"),
+  countryChip: q("#countryChip"),
+  countryChipText: q("#countryChipText"),
+  searchChip: q("#searchChip"),
+  searchChipText: q("#searchChipText"),
+  themeSelect: q("#themeSelect"),
+  themeBadge: q("#themeBadge"),
+  viewMode: q("#viewMode"),
 
   modal: q("#modal"),
   modalTitle: q("#modalTitle"),
@@ -229,15 +235,21 @@ const els = {
   flagSwatch: q("#flagSwatch")
 };
 
-/* ====== State ====== */
-let state = {
+/* ====== State + preferensi ====== */
+const store = {
+  get(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch{ return d; } },
+  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} }
+};
+let state = Object.assign({
   query: "",
   sort: "name-asc",
   dense: false,
   showMarkers: true,
   showRanges: true,
-  countryIso: ""  // filter negara (ISO2)
-};
+  countryIso: "",
+  theme: store.get("theme","hitam"),
+  view: store.get("view","cards")
+}, store.get("state", {}));
 
 /* ====== Helpers ====== */
 function q(s){ return document.querySelector(s); }
@@ -265,13 +277,19 @@ function isoToFlagEmoji(iso2){
 }
 function setFlagSwatch(iso){
   const cols = FLAG_COLORS[iso] || ["#eee","#ddd","#ccc"];
-  const stops = cols.map((c,i,arr)=> {
-    const start = Math.round(i/arr.length*100);
-    const end = Math.round((i+1)/arr.length*100);
-    return `${c} ${start}% ${end}%`;
-  }).join(", ");
+  const stops = cols.map((c,i,arr)=> `${c} ${Math.round(i/arr.length*100)}% ${Math.round((i+1)/arr.length*100)}%`).join(", ");
   els.flagSwatch.style.background = `linear-gradient(90deg, ${stops})`;
   els.flagSwatch.title = iso ? `Bendera: ${COUNTRY_NAMES[iso] || iso}` : "Warna bendera";
+}
+function applyTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  els.themeBadge.textContent = `Tema: ${t.charAt(0).toUpperCase()+t.slice(1)}`;
+  store.set("theme", t); state.theme = t; store.set("state", state);
+}
+function applyView(v){
+  els.viewMode.value = v;
+  els.cards.classList.toggle("list", v==="list");
+  store.set("view", v); state.view = v; store.set("state", state);
 }
 
 /* ====== Index negara -> hewan & dropdown ====== */
@@ -298,7 +316,7 @@ function buildCountrySelect(){
 }
 
 /* =========================================================
-   RENDER GRID
+   RENDER GRID + STATUS
    ========================================================= */
 let lastFilteredIds = new Set();
 
@@ -307,6 +325,21 @@ function render(){
     .filter(a => matchesQuery(a, state.query))
     .filter(a => state.countryIso ? (a.countries||[]).includes(state.countryIso) : true)
     .sort(bySort);
+
+  // Result count & chips
+  els.resultCount.textContent = list.length;
+  if(state.countryIso){
+    els.countryChipText.textContent = `${isoToFlagEmoji(state.countryIso)} ${(COUNTRY_NAMES[state.countryIso]||state.countryIso)}`;
+    els.countryChip.classList.remove("hidden");
+  }else{
+    els.countryChip.classList.add("hidden");
+  }
+  if(state.query){
+    els.searchChipText.textContent = `“${state.query}”`;
+    els.searchChip.classList.remove("hidden");
+  }else{
+    els.searchChip.classList.add("hidden");
+  }
 
   els.cards.innerHTML = "";
   if(list.length === 0){
@@ -428,7 +461,7 @@ async function initMap(){
   }catch(_){ /* noop */ }
 
   if(!loaded){
-    // Fallback: gunakan kotak-batas sederhana untuk negara yang relevan
+    // Fallback: kotak-batas sederhana
     countriesLayer = L.layerGroup().addTo(map);
     buildFallbackCountryRects();
     toast("Memakai batas negara sederhana (offline/fallback).");
@@ -540,18 +573,11 @@ function onEachCountry(feature, layer){
     mouseover: (e)=>{ e.target.setStyle({ weight: 1.6, fillOpacity: Math.max(0.3, (e.target.options.fillOpacity||0.2)) }); },
     mouseout: (e)=>{ countriesLayer && countriesLayer.resetStyle && countriesLayer.resetStyle(e.target); },
     click: ()=> {
-      if(!iso){
-        toast("Negara tidak teridentifikasi di dataset."); return;
-      }
+      if(!iso){ toast("Negara tidak teridentifikasi di dataset."); return; }
       if(!hasAnimals){
-        state.countryIso = iso;
-        selectedCountryIso = iso;
-        setFlagSwatch(iso);
-        els.countrySelect.value = COUNTRY_ANIMALS[iso] ? iso : iso;
-        render();
-        fitCountryBounds(iso);
-        toast("Belum ada hewan terdaftar untuk negara ini.");
-        return;
+        state.countryIso = iso; selectedCountryIso = iso; setFlagSwatch(iso);
+        els.countrySelect.value = iso; render(); fitCountryBounds(iso);
+        toast("Belum ada hewan terdaftar untuk negara ini."); return;
       }
       selectCountry(iso);
     }
@@ -574,7 +600,7 @@ function selectCountry(iso){
   fitCountryBounds(iso);
 }
 
-/* ====== Ambil ISO2 dari berbagai skema properti ====== */
+/* ====== ISO2 dari properti ====== */
 function getISO2(f){
   const p = f && f.properties || {};
   let iso = p.ISO_A2 || p.iso_a2 || p.ISO2 || p.code || p.id || "";
@@ -589,7 +615,7 @@ function getName(f){
   return p.ADMIN || p.name || p.NAME || p.NAME_LONG || p.Country || "";
 }
 
-/* ====== Fallback rectangles (bbox sederhana) ====== */
+/* ====== Fallback rectangles (bbox) ====== */
 const FALLBACK_BBOX = {
   IN:[[8,68],[36,97]], RU:[[45,30],[75,170]], ID:[[-11,95],[6,141]], BD:[[20,88],[27,93]], NP:[[26,80],[31,88]],
   MM:[[9,92],[28,101]], TH:[[5,97],[21,106]], LA:[[14,100],[22,107]], KH:[[10,102],[15,107]], VN:[[8,103],[24,110]], CN:[[18,73],[54,135]],
@@ -632,7 +658,8 @@ function styleByIso(iso, hover){
    EVENT BINDINGS
    ========================================================= */
 els.search.addEventListener("input", (e)=>{ state.query = e.target.value.trim(); render(); });
-els.clearSearch.addEventListener("click", ()=>{ state.query=""; els.search.value=""; render(); });
+els.clearSearchBtn.addEventListener("click", ()=>{ state.query=""; els.search.value=""; render(); });
+
 els.sort.addEventListener("change", (e)=>{ state.sort = e.target.value; render(); });
 
 els.density.addEventListener("click", ()=>{
@@ -640,10 +667,11 @@ els.density.addEventListener("click", ()=>{
   document.documentElement.style.setProperty("--radius-xl", state.dense? "14px":"22px");
   document.documentElement.style.setProperty("--radius-md", state.dense? "8px":"14px");
   els.density.setAttribute("aria-pressed", String(state.dense));
+  store.set("state", state);
 });
 
-els.showMarkers.addEventListener("change", ()=>{ state.showMarkers = els.showMarkers.checked; applyLayerVisibility(); });
-els.showRanges.addEventListener("change", ()=>{ state.showRanges = els.showRanges.checked; applyLayerVisibility(); });
+els.showMarkers.addEventListener("change", ()=>{ state.showMarkers = els.showMarkers.checked; applyLayerVisibility(); store.set("state", state); });
+els.showRanges.addEventListener("change", ()=>{ state.showRanges = els.showRanges.checked; applyLayerVisibility(); store.set("state", state); });
 els.fitAll.addEventListener("click", fitAllBounds);
 els.fitVisible.addEventListener("click", fitVisibleBounds);
 
@@ -653,6 +681,10 @@ els.countrySelect.addEventListener("change", ()=>{
   selectCountry(iso);
 });
 els.clearCountry.addEventListener("click", clearCountryFilter);
+document.addEventListener("click", (e)=>{
+  if(e.target && e.target.matches('[data-clear="country"]')){ clearCountryFilter(); }
+  if(e.target && e.target.matches('[data-clear="search"]')){ state.query=""; els.search.value=""; render(); }
+});
 
 function clearCountryFilter(){
   state.countryIso = "";
@@ -663,6 +695,14 @@ function clearCountryFilter(){
   if(countriesLayer && countriesLayer.setStyle){ countriesLayer.setStyle(styleCountry); }
   fitAllBounds();
 }
+
+els.themeSelect.addEventListener("change", ()=>{
+  const t = els.themeSelect.value;
+  applyTheme(t);
+});
+els.viewMode.addEventListener("change", ()=>{
+  applyView(els.viewMode.value);
+});
 
 document.body.addEventListener("click", (e)=>{ if(e.target.matches("[data-close], .modal-backdrop")) closeModal(); });
 window.addEventListener("keydown", (e)=>{
@@ -688,7 +728,15 @@ function toast(msg){
    Inisialisasi
    ========================================================= */
 document.addEventListener("DOMContentLoaded", ()=>{
+  // Tema + tampilan awal
+  els.themeSelect.value = state.theme || "hitam";
+  applyTheme(els.themeSelect.value);
+  applyView(state.view || "cards");
+
   buildCountrySelect();
   render();
   initMap();
+
+  // Sinkron chip awal jika ada filter (misal reload)
+  if(state.countryIso){ setFlagSwatch(state.countryIso); els.countrySelect.value = state.countryIso; }
 });
