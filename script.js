@@ -1,8 +1,9 @@
 "use strict";
 /* =========================================================
-   HANFANDA — Peta Globe + Warna Bendera + Filter Negara
-   Tema: Hitam • Cerah • Hujan (efek hujan lembut)
-   Stabil + fallback jika GeoJSON gagal dimuat.
+   HANFANDA — Tema Gelap Elegan + Peta Globe
+   - Struktur rapi, tanpa blank putih
+   - Fitur pemilihan lengkap: search, sort, view, negara, marker/sebaran, zoom
+   - Fallback batas negara jika GeoJSON gagal dimuat
    ========================================================= */
 
 /* Dataset hewan — menyertakan daftar negara (ISO2) untuk filter */
@@ -207,8 +208,6 @@ const els = {
   countryChipText: q("#countryChipText"),
   searchChip: q("#searchChip"),
   searchChipText: q("#searchChipText"),
-  themeSelect: q("#themeSelect"),
-  themeBadge: q("#themeBadge"),
   viewMode: q("#viewMode"),
 
   modal: q("#modal"),
@@ -235,7 +234,7 @@ const els = {
   flagSwatch: q("#flagSwatch")
 };
 
-/* ====== State + preferensi ====== */
+/* ====== State + preferensi ringkas ====== */
 const store = {
   get(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch{ return d; } },
   set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} }
@@ -247,7 +246,6 @@ let state = Object.assign({
   showMarkers: true,
   showRanges: true,
   countryIso: "",
-  theme: store.get("theme","hitam"),
   view: store.get("view","cards")
 }, store.get("state", {}));
 
@@ -276,15 +274,10 @@ function isoToFlagEmoji(iso2){
   return String.fromCodePoint(...iso2.toUpperCase().split("").map(c => A + (c.charCodeAt(0) - 65)));
 }
 function setFlagSwatch(iso){
-  const cols = FLAG_COLORS[iso] || ["#eee","#ddd","#ccc"];
+  const cols = FLAG_COLORS[iso] || ["#333","#2a2a2a","#1f1f1f"];
   const stops = cols.map((c,i,arr)=> `${c} ${Math.round(i/arr.length*100)}% ${Math.round((i+1)/arr.length*100)}%`).join(", ");
   els.flagSwatch.style.background = `linear-gradient(90deg, ${stops})`;
   els.flagSwatch.title = iso ? `Bendera: ${COUNTRY_NAMES[iso] || iso}` : "Warna bendera";
-}
-function applyTheme(t){
-  document.documentElement.setAttribute("data-theme", t);
-  els.themeBadge.textContent = `Tema: ${t.charAt(0).toUpperCase()+t.slice(1)}`;
-  store.set("theme", t); state.theme = t; store.set("state", state);
 }
 function applyView(v){
   els.viewMode.value = v;
@@ -341,6 +334,7 @@ function render(){
     els.searchChip.classList.add("hidden");
   }
 
+  // Render cards
   els.cards.innerHTML = "";
   if(list.length === 0){
     els.empty.classList.remove("hidden");
@@ -438,9 +432,17 @@ async function initMap(){
     maxBoundsViscosity: 0.8
   }).setView([15, 10], 2);
 
+  // Gunakan tile gelap; buffer dan error tile untuk mencegah flash/blank putih
   L.tileLayer(
     "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-    { attribution:'© OpenStreetMap, © CARTO', maxZoom: 19 }
+    {
+      attribution:'© OpenStreetMap, © CARTO',
+      maxZoom: 19,
+      updateWhenIdle: true,
+      keepBuffer: 4,
+      crossOrigin: true,
+      errorTileUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAuMBi3q1N2kAAAAASUVORK5CYII="
+    }
   ).addTo(map);
 
   markerLayer = L.layerGroup().addTo(map);
@@ -696,10 +698,6 @@ function clearCountryFilter(){
   fitAllBounds();
 }
 
-els.themeSelect.addEventListener("change", ()=>{
-  const t = els.themeSelect.value;
-  applyTheme(t);
-});
 els.viewMode.addEventListener("change", ()=>{
   applyView(els.viewMode.value);
 });
@@ -728,15 +726,9 @@ function toast(msg){
    Inisialisasi
    ========================================================= */
 document.addEventListener("DOMContentLoaded", ()=>{
-  // Tema + tampilan awal
-  els.themeSelect.value = state.theme || "hitam";
-  applyTheme(els.themeSelect.value);
   applyView(state.view || "cards");
-
   buildCountrySelect();
   render();
   initMap();
-
-  // Sinkron chip awal jika ada filter (misal reload)
   if(state.countryIso){ setFlagSwatch(state.countryIso); els.countrySelect.value = state.countryIso; }
 });
