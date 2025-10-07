@@ -1,5 +1,5 @@
 /* =========================================================
-   HANFANDA — Elegan-Soft dengan Peta Skala Kecil
+   HANFANDA — Elegan-Soft + Peta Globe
    ========================================================= */
 :root{
   --bg-0:#0a0b0c; --bg-1:#0e1013; --surface:#101215; --surface-2:#12151a;
@@ -70,6 +70,7 @@ body{
 .control.search input:focus{ border-color:rgba(255,255,255,.18); background:rgba(255,255,255,.05); }
 .kbd{ position:absolute; right:8px; top:50%; transform:translateY(-50%); font:700 12px/1 Space Mono, monospace; padding:6px 8px; border-radius:8px;
   background:rgba(255,255,255,.06); color:var(--text); border:1px solid var(--line); opacity:.7; }
+
 select{ appearance:none; padding:12px 14px; border-radius:var(--radius-md); border:1px solid var(--line); background:rgba(255,255,255,.03);
   color:var(--text); min-width:200px;
   background-image: linear-gradient(45deg, transparent 50%, rgba(255,255,255,.5) 50%),
@@ -84,12 +85,16 @@ select{ appearance:none; padding:12px 14px; border-radius:var(--radius-md); bord
 .btn.ghost{ background:transparent; }
 .btn[disabled]{ opacity:.5; cursor:not-allowed; }
 
-/* Peta kecil */
+/* Peta globe */
 .map-section{ position:relative; margin:16px 0 24px; }
-#map{ height:260px; border-radius:var(--radius-xl); border:1px solid var(--line); overflow:hidden; box-shadow:var(--shadow); }
+#map{ height:320px; border-radius:var(--radius-xl); border:1px solid var(--line); overflow:hidden; box-shadow:var(--shadow); }
 .map-toolbar{ position:absolute; left:10px; top:10px; right:10px; display:flex; justify-content:space-between; gap:10px; padding:8px 10px;
   border:1px solid var(--line); border-radius:14px; z-index:500; }
 .map-toolbar .inl{ display:inline-flex; gap:6px; align-items:center; }
+.map-right{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.country-select{ display:flex; align-items:center; gap:8px; }
+.flag-swatch{ width:48px; height:16px; border-radius:6px; border:1px solid var(--line); display:inline-block; background:linear-gradient(90deg,#fff,#eee); }
+
 .map-note{ margin:.6rem 2px 0; }
 .leaflet-container{ background:#0f1115; }
 .leaflet-control-attribution{ background:rgba(0,0,0,.35) !important; color:#cfd2da !important; }
@@ -159,16 +164,15 @@ select{ appearance:none; padding:12px 14px; border-radius:var(--radius-md); bord
 
 /* Responsif */
 @media (max-width:900px){ .stats{ grid-template-columns: repeat(2, 1fr); } .modal-grid{ grid-template-columns: repeat(2,1fr); } }
-@media (max-width:640px){ .header-inner{ padding:20px 16px 12px; } .controls{ padding:0 16px 10px; } .modal-grid{ grid-template-columns: 1fr; } #map{ height:220px; } }
+@media (max-width:640px){ .header-inner{ padding:20px 16px 12px; } .controls{ padding:0 16px 10px; } .modal-grid{ grid-template-columns: 1fr; } #map{ height:280px; } }
 
 /* Animasi */
 @keyframes float{ 0%{ transform: translate(-2%, 0%) scale(1); } 100%{ transform: translate(2%, -2%) scale(1.05); } }
 @keyframes spin{ to{ transform: translate(-50%,-50%) rotate(1turn); } }
-@keyframes slide{ to{ transform: translateX(-20%) translateY(-10%); } }
 @keyframes pop{ to{ opacity:1; transform: translate(-50%,-50%) scale(1); } }
 
 /* Aksesibilitas */
 :focus-visible{ outline:2px solid rgba(255,255,255,.6); outline-offset:2px; }
 
-/* Matikan gerak OS */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce){ .blob,.ring,.stripes,.grain::before{ animation:none !important; } .card:hover{ transform:none; } }
