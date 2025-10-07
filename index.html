@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="id">
+<html lang="id" data-theme="hitam">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HANFANDA — Biodata Hewan Darat</title>
-  <meta name="description" content="HANFANDA: Ensiklopedia mini hewan darat dengan peta interaktif bergaya globe, warna bendera, dan filter negara." />
+  <meta name="description" content="Ensiklopedia mini hewan darat dengan peta globe, warna bendera, filter negara, dan tema Hitam • Cerah • Hujan." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Latar animasi abstrak -->
+  <!-- Latar elegan + overlay hujan (muncul saat tema 'hujan') -->
   <div class="bg" aria-hidden="true">
     <div class="bg-layer blob blob-a"></div>
     <div class="bg-layer blob blob-b"></div>
@@ -21,6 +21,7 @@
     <div class="bg-layer stripes"></div>
     <div class="bg-layer grain"></div>
   </div>
+  <div id="rain" class="rain" aria-hidden="true"></div>
 
   <header class="site-header glass">
     <div class="header-inner">
@@ -28,7 +29,13 @@
         <span class="brand-top">HANFANDA</span>
         <span class="brand-main">Biodata Hewan Darat</span>
       </h1>
-      <p class="tagline">Peta globe • Warna bendera • Pilih negara untuk melihat hewan yang hidup di sana.</p>
+      <div class="brand-badges">
+        <span class="badge">Peta Globe</span>
+        <span class="badge">Elegan‑Soft</span>
+        <span class="badge" id="themeBadge">Tema: Hitam</span>
+      </div>
+
+      <p class="tagline">Jelajahi spesies dari berbagai benua. Pilih negara di peta atau filter dari panel di bawah.</p>
 
       <div class="controls">
         <label class="control search">
@@ -36,8 +43,8 @@
           <span class="kbd">/</span>
         </label>
 
-        <label class="control sort">
-          <span>Urutkan</span>
+        <label class="control">
+          <span class="ctrl-k">Urutkan</span>
           <select id="sort">
             <option value="name-asc">Nama (A–Z)</option>
             <option value="name-desc">Nama (Z–A)</option>
@@ -47,10 +54,46 @@
           </select>
         </label>
 
+        <label class="control">
+          <span class="ctrl-k">Tema</span>
+          <select id="themeSelect">
+            <option value="hitam">Hitam</option>
+            <option value="cerah">Cerah</option>
+            <option value="hujan">Hujan</option>
+          </select>
+        </label>
+
+        <label class="control">
+          <span class="ctrl-k">Tampilan</span>
+          <select id="viewMode">
+            <option value="cards">Kartu</option>
+            <option value="list">Daftar</option>
+          </select>
+        </label>
+
         <button id="density" class="btn ghost" aria-pressed="false" title="Ubah kerapatan tampilan">Kerapatan</button>
       </div>
     </div>
   </header>
+
+  <!-- Status bar -->
+  <section class="statusbar glass" aria-live="polite">
+    <div class="status-inner">
+      <div class="stat">
+        <span class="mono">Spesies terlihat:</span> <strong id="resultCount">0</strong>
+      </div>
+      <div class="filters">
+        <span id="countryChip" class="chip chip-clear hidden">
+          <span id="countryChipText">Negara</span>
+          <button class="chip-x" data-clear="country" aria-label="Hapus filter negara">×</button>
+        </span>
+        <span id="searchChip" class="chip chip-clear hidden">
+          <span id="searchChipText">Pencarian</span>
+          <button class="chip-x" data-clear="search" aria-label="Hapus pencarian">×</button>
+        </span>
+      </div>
+    </div>
+  </section>
 
   <main class="container">
     <!-- Peta Interaktif: Globe -->
@@ -75,7 +118,19 @@
         </div>
       </div>
       <div id="map" role="region" aria-label="Peta habitat hewan"></div>
-      <p class="map-note muted">Sebaran bersifat perkiraan untuk edukasi. Klik negara atau pilih dari dropdown untuk menampilkan hewan yang ada di negara tersebut.</p>
+      <div class="legend glass">
+        <span class="legend-title mono">Legenda</span>
+        <span class="legend-item">
+          <span class="legend-swatch flag"></span> Warna isi negara mengikuti bendera (nuansa)
+        </span>
+        <span class="legend-item">
+          <span class="legend-swatch marker"></span> Marker habitat
+        </span>
+        <span class="legend-item">
+          <span class="legend-swatch range"></span> Area sebaran (perkiraan)
+        </span>
+      </div>
+      <p class="map-note muted">Sebaran bersifat ilustratif untuk edukasi. Klik negara atau pilih dari dropdown untuk menampilkan hewan yang hidup di sana.</p>
     </section>
 
     <!-- Grid kartu -->
