@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HANFANDA — Biodata Hewan Darat</title>
+  <meta name="description" content="HANFANDA: Ensiklopedia mini hewan darat dengan peta interaktif skala kecil dan dataset kurasi AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <!-- Leaflet (peta) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Latar animasi abstrak -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg-layer blob blob-a"></div>
+    <div class="bg-layer blob blob-b"></div>
+    <div class="bg-layer ring ring-a"></div>
+    <div class="bg-layer ring ring-b"></div>
+    <div class="bg-layer stripes"></div>
+    <div class="bg-layer grain"></div>
+  </div>
+
+  <header class="site-header glass">
+    <div class="header-inner">
+      <h1 class="brand">
+        <span class="brand-top">HANFANDA</span>
+        <span class="brand-main">Biodata Hewan Darat</span>
+      </h1>
+      <p class="tagline">Dataset kurasi AI • Peta interaktif skala kecil • Tampilan elegan-soft.</p>
+
+      <div class="controls">
+        <label class="control search">
+          <input id="search" type="search" placeholder="Cari hewan (contoh: singa, jerapah, panda)..." autocomplete="off" />
+          <span class="kbd">/</span>
+        </label>
+
+        <label class="control sort">
+          <span>Urutkan</span>
+          <select id="sort">
+            <option value="name-asc">Nama (A–Z)</option>
+            <option value="name-desc">Nama (Z–A)</option>
+            <option value="status">Status Konservasi</option>
+            <option value="weight">Berat (terberat)</option>
+            <option value="lifespan">Umur (terpanjang)</option>
+          </select>
+        </label>
+
+        <button id="density" class="btn ghost" aria-pressed="false" title="Ubah kerapatan tampilan">Kerapatan</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Peta Interaktif Skala Kecil -->
+  <main class="container">
+    <section id="mapSection" class="map-section">
+      <div class="map-toolbar glass">
+        <div class="map-left">
+          <strong class="mono">Peta (Skala Kecil)</strong>
+          <label class="inl"><input type="checkbox" id="showMarkers" checked /> Marker</label>
+          <label class="inl"><input type="checkbox" id="showRanges" checked /> Sebaran</label>
+        </div>
+        <div class="map-right">
+          <button id="fitVisible" class="btn ghost" title="Zoom agar hasil yang terlihat pas">Zoom Hasil</button>
+          <button id="fitAll" class="btn ghost" title="Zoom agar semua habitat terlihat">Zoom Semua</button>
+        </div>
+      </div>
+      <div id="map" role="region" aria-label="Peta habitat hewan"></div>
+      <p class="map-note muted">Sebaran bersifat perkiraan untuk tampilan edukasi. Peta dibatasi pada zoom kecil-menengah agar ringkas.</p>
+    </section>
+
+    <!-- Grid kartu -->
+    <section id="cards" class="grid" aria-live="polite"></section>
+
+    <div id="empty" class="empty-state hidden">
+      <div class="empty-card glass">
+        <div class="empty-emoji" aria-hidden="true">🧐</div>
+        <h3>Tidak ada hasil</h3>
+        <p>Coba kata kunci lain atau hapus filter.</p>
+        <button id="clearSearch" class="btn">Hapus Pencarian</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="mono">HANFANDA • Tipografi: Playfair Display, Inter, Space Mono.</p>
+      <p class="muted">Konten untuk edukasi, bukan referensi ilmiah resmi.</p>
+    </div>
+  </footer>
+
+  <!-- Modal detail -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel glass">
+      <button class="modal-close" aria-label="Tutup" data-close>&times;</button>
+      <div class="modal-content">
+        <div class="modal-hero">
+          <div class="modal-icon" id="modalIcon" aria-hidden="true">🐾</div>
+          <div class="modal-titles">
+            <h2 id="modalTitle" class="modal-title"></h2>
+            <p id="modalLatin" class="latin mono"></p>
+          </div>
+        </div>
+
+        <div class="modal-grid">
+          <div class="kv"><span class="k">Habitat</span><span class="v" id="modalHabitat"></span></div>
+          <div class="kv"><span class="k">Makanan</span><span class="v" id="modalDiet"></span></div>
+          <div class="kv"><span class="k">Status</span><span class="v" id="modalStatus"></span></div>
+          <div class="kv"><span class="k">Umur</span><span class="v" id="modalLifespan"></span></div>
+          <div class="kv"><span class="k">Berat</span><span class="v" id="modalWeight"></span></div>
+          <div class="kv"><span class="k">Tinggi/Panjang</span><span class="v" id="modalLength"></span></div>
+        </div>
+
+        <div class="modal-facts">
+          <h3>Fakta Singkat</h3>
+          <ul id="modalFacts" class="facts-list"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
