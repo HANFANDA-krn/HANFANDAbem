@@ -1,158 +1,161 @@
 <!doctype html>
-<html lang="id" data-theme="hitam">
+<html lang="id">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0e1013" />
-  <title>HANFANDA — Biodata Hewan Darat</title>
-  <meta name="description" content="Ensiklopedia mini hewan darat dengan peta globe, warna bendera, dan filter negara — tema gelap elegan." />
+  <title>HANFANDA — Atlas Habitat Hewan Darat</title>
+  <meta name="description" content="Peta globe interaktif skala besar. Klik negara untuk melihat daftar hewan darat dan habitat aslinya." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Latar elegan -->
-  <div class="bg" aria-hidden="true">
-    <div class="bg-layer blob blob-a"></div>
-    <div class="bg-layer blob blob-b"></div>
-    <div class="bg-layer ring ring-a"></div>
-    <div class="bg-layer ring ring-b"></div>
-    <div class="bg-layer stripes"></div>
-    <div class="bg-layer grain"></div>
+  <div class="backdrop" aria-hidden="true">
+    <div class="blob a"></div>
+    <div class="blob b"></div>
+    <div class="grid"></div>
+    <div class="glow"></div>
   </div>
 
   <header class="site-header glass">
-    <div class="header-inner">
-      <h1 class="brand">
-        <span class="brand-top">HANFANDA</span>
-        <span class="brand-main">Biodata Hewan Darat</span>
-      </h1>
-      <p class="tagline">Jelajahi spesies dari berbagai benua. Pilih negara di peta atau cari dari panel.</p>
+    <div class="container header-inner">
+      <div class="hero">
+        <h1 class="brand">
+          HANFANDA
+          <span class="sub">Atlas Habitat Hewan Darat</span>
+        </h1>
+        <p class="tagline">
+          Peta globe interaktif untuk mengeksplorasi hewan darat berdasarkan negara dan habitat realistisnya.
+        </p>
+      </div>
 
       <div class="controls">
         <label class="control search">
-          <input id="search" type="search" placeholder="Cari hewan (contoh: singa, jerapah, panda)..." autocomplete="off" />
-          <span class="kbd">/</span>
+          <span class="label">Cari Hewan</span>
+          <div class="field">
+            <input id="search" type="search" placeholder="Contoh: jaguar, panda, moose…" autocomplete="off" />
+            <span class="hint">Tekan /</span>
+          </div>
         </label>
 
         <label class="control">
-          <span class="ctrl-k">Urutkan</span>
+          <span class="label">Urutkan</span>
           <select id="sort">
             <option value="name-asc">Nama (A–Z)</option>
             <option value="name-desc">Nama (Z–A)</option>
-            <option value="status">Status Konservasi</option>
+            <option value="status">Status konservasi</option>
             <option value="weight">Berat (terberat)</option>
             <option value="lifespan">Umur (terpanjang)</option>
           </select>
         </label>
 
         <label class="control">
-          <span class="ctrl-k">Tampilan</span>
+          <span class="label">Negara</span>
+          <div class="field multi">
+            <select id="countrySelect"><option value="">— Pilih negara —</option></select>
+            <button id="clearCountry" class="chip-btn" title="Hapus filter negara">×</button>
+            <span id="flagSwatch" class="flag-swatch" title="Warna bendera"></span>
+          </div>
+        </label>
+
+        <label class="control toggles">
+          <span class="label">Lapisan Peta</span>
+          <div class="toggle">
+            <label><input type="checkbox" id="showMarkers" checked> Marker</label>
+            <label><input type="checkbox" id="showRanges" checked> Sebaran</label>
+          </div>
+        </label>
+
+        <label class="control">
+          <span class="label">Tampilan</span>
           <select id="viewMode">
             <option value="cards">Kartu</option>
             <option value="list">Daftar</option>
           </select>
         </label>
 
-        <button id="density" class="btn ghost" aria-pressed="false" title="Ubah kerapatan tampilan">Kerapatan</button>
+        <button id="density" class="btn ghost" aria-pressed="false">Kerapatan</button>
+        <button id="fitVisible" class="btn ghost">Zoom Hasil</button>
+        <button id="fitAll" class="btn">Zoom Semua</button>
       </div>
     </div>
   </header>
 
-  <!-- Status bar -->
-  <section class="statusbar glass" aria-live="polite">
-    <div class="status-inner">
-      <div class="stat"><span class="mono">Spesies terlihat:</span> <strong id="resultCount">0</strong></div>
+  <main class="container main">
+    <section class="map-section">
+      <div id="map" role="region" aria-label="Peta globe habitat hewan"></div>
+      <div class="legend glass">
+        <span class="legend-item"><span class="swatch flag"></span> Warna negara bernuansa bendera</span>
+        <span class="legend-item"><span class="swatch marker"></span> Lokasi habitat</span>
+        <span class="legend-item"><span class="swatch range"></span> Area sebaran (perkiraan)</span>
+      </div>
+
+      <aside id="countryPanel" class="panel glass hidden" aria-live="polite">
+        <div class="panel-head">
+          <div class="flag" id="panelFlag">🏳️</div>
+          <div>
+            <h2 id="panelTitle" class="panel-title"></h2>
+            <p id="panelCount" class="panel-count"></p>
+          </div>
+        </div>
+        <ul id="panelList" class="panel-list"></ul>
+      </aside>
+    </section>
+
+    <section class="statusbar glass" aria-live="polite">
+      <div><span class="mono">Spesies terlihat:</span> <strong id="resultCount">0</strong></div>
       <div class="filters">
-        <span id="countryChip" class="chip chip-clear hidden">
+        <span id="countryChip" class="chip hidden">
           <span id="countryChipText">Negara</span>
           <button class="chip-x" data-clear="country" aria-label="Hapus filter negara">×</button>
         </span>
-        <span id="searchChip" class="chip chip-clear hidden">
+        <span id="searchChip" class="chip hidden">
           <span id="searchChipText">Pencarian</span>
           <button class="chip-x" data-clear="search" aria-label="Hapus pencarian">×</button>
         </span>
       </div>
-    </div>
-  </section>
-
-  <main class="container">
-    <!-- Peta Interaktif: Globe -->
-    <section id="mapSection" class="map-section">
-      <div class="map-toolbar glass">
-        <div class="map-left">
-          <strong class="mono">Peta (Globe)</strong>
-          <label class="inl"><input type="checkbox" id="showMarkers" checked /> Marker</label>
-          <label class="inl"><input type="checkbox" id="showRanges" checked /> Sebaran</label>
-        </div>
-        <div class="map-right">
-          <div class="country-select">
-            <span class="mono">Negara</span>
-            <select id="countrySelect">
-              <option value="">— Pilih negara —</option>
-            </select>
-            <button id="clearCountry" class="btn ghost" title="Hapus filter negara">Bersihkan</button>
-            <span id="flagSwatch" class="flag-swatch" title="Warna bendera"></span>
-          </div>
-          <button id="fitVisible" class="btn ghost" title="Zoom agar hasil yang terlihat pas">Zoom Hasil</button>
-          <button id="fitAll" class="btn ghost" title="Zoom Semua Habitat">Zoom Semua</button>
-        </div>
-      </div>
-      <div id="map" role="region" aria-label="Peta habitat hewan"></div>
-      <div class="legend glass">
-        <span class="legend-title mono">Legenda</span>
-        <span class="legend-item"><span class="legend-swatch flag"></span> Warna isi negara mengikuti bendera (nuansa)</span>
-        <span class="legend-item"><span class="legend-swatch marker"></span> Marker habitat</span>
-        <span class="legend-item"><span class="legend-swatch range"></span> Area sebaran (perkiraan)</span>
-      </div>
-      <p class="map-note muted">Sebaran bersifat ilustratif untuk edukasi. Klik negara atau pilih dari dropdown untuk menampilkan hewan yang hidup di sana.</p>
     </section>
 
-    <!-- Grid kartu -->
     <section id="cards" class="grid" aria-live="polite"></section>
 
-    <div id="empty" class="empty-state hidden">
+    <div id="empty" class="empty hidden">
       <div class="empty-card glass">
-        <div class="empty-emoji" aria-hidden="true">🧐</div>
+        <div class="emoji" aria-hidden="true">🧭</div>
         <h3>Tidak ada hasil</h3>
-        <p>Coba kata kunci lain atau hapus filter.</p>
+        <p>Coba kata kunci lain atau bersihkan filter.</p>
         <button id="clearSearch" class="btn">Hapus Pencarian</button>
       </div>
     </div>
   </main>
 
   <footer class="site-footer">
-    <div class="footer-inner">
-      <p class="mono">HANFANDA • Tipografi: Playfair Display, Inter, Space Mono.</p>
-      <p class="muted">Konten edukasi; sebaran geografis bersifat ilustratif.</p>
+    <div class="container foot-inner">
+      <p class="mono">HANFANDA — Atlas Habitat Hewan Darat. Data habitat bersifat umum untuk edukasi.</p>
     </div>
   </footer>
 
-  <!-- Modal detail -->
   <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-backdrop" data-close></div>
     <div class="modal-panel glass">
-      <button class="modal-close" aria-label="Tutup" data-close>&times;</button>
+      <button class="modal-close" data-close aria-label="Tutup">&times;</button>
       <div class="modal-content">
         <div class="modal-hero">
-          <div class="modal-icon" id="modalIcon" aria-hidden="true">🐾</div>
-          <div class="modal-titles">
+          <div id="modalIcon" class="avatar lg">🐾</div>
+          <div>
             <h2 id="modalTitle" class="modal-title"></h2>
             <p id="modalLatin" class="latin mono"></p>
           </div>
         </div>
-
         <div class="modal-grid">
-          <div class="kv"><span class="k">Habitat</span><span class="v" id="modalHabitat"></span></div>
-          <div class="kv"><span class="k">Makanan</span><span class="v" id="modalDiet"></span></div>
-          <div class="kv"><span class="k">Status</span><span class="v" id="modalStatus"></span></div>
-          <div class="kv"><span class="k">Umur</span><span class="v" id="modalLifespan"></span></div>
-          <div class="kv"><span class="k">Berat</span><span class="v" id="modalWeight"></span></div>
-          <div class="kv"><span class="k">Tinggi/Panjang</span><span class="v" id="modalLength"></span></div>
+          <div class="kv"><span class="k mono">Habitat</span><span class="v" id="modalHabitat"></span></div>
+          <div class="kv"><span class="k mono">Makanan</span><span class="v" id="modalDiet"></span></div>
+          <div class="kv"><span class="k mono">Status</span><span class="v" id="modalStatus"></span></div>
+          <div class="kv"><span class="k mono">Umur</span><span class="v" id="modalLifespan"></span></div>
+          <div class="kv"><span class="k mono">Berat</span><span class="v" id="modalWeight"></span></div>
+          <div class="kv"><span class="k mono">Tinggi/Panjang</span><span class="v" id="modalLength"></span></div>
         </div>
-
         <div class="modal-facts">
           <h3>Fakta Singkat</h3>
           <ul id="modalFacts" class="facts-list"></ul>
@@ -161,7 +164,6 @@
     </div>
   </div>
 
-  <!-- Toast -->
   <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
