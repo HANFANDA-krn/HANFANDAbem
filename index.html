@@ -62,26 +62,26 @@
 
   <main class="container main">
     <section class="map-wrapper">
-      <div class="map-frame">
+      <div class="map-frame" id="mapFrame">
         <div id="map" role="region" aria-label="Peta habitat hewan"></div>
         <div class="legend">
           <span><span class="swatch marker"></span> Marker habitat</span>
           <span><span class="swatch range"></span> Area sebaran (radius km)</span>
         </div>
       </div>
-    </section>
 
-    <aside id="mapInfo" class="map-info hidden" aria-live="polite">
-      <button id="closeMapInfo" class="map-info-close" aria-label="Tutup panel habitat">×</button>
-      <div class="map-info-header">
-        <div id="mapInfoAvatar" class="avatar sm">🐾</div>
-        <div>
-          <h2 id="mapInfoTitle" class="map-info-title">Hewan</h2>
-          <p id="mapInfoSubtitle" class="map-info-subtitle">Habitat</p>
+      <div id="mapOverlay" class="map-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="mapOverlayTitle">
+        <button id="mapOverlayClose" class="overlay-close" aria-label="Kembali ke peta">×</button>
+        <div class="overlay-header">
+          <div id="mapOverlayAvatar" class="avatar lg">🐾</div>
+          <div>
+            <h2 id="mapOverlayTitle" class="overlay-title">Hewan</h2>
+            <p id="mapOverlaySubtitle" class="overlay-subtitle">Habitat</p>
+          </div>
         </div>
+        <div id="mapOverlayBody" class="overlay-body"></div>
       </div>
-      <div id="mapInfoContent" class="map-info-content"></div>
-    </aside>
+    </section>
 
     <section class="statusbar">
       <div><span class="mono">Spesies terlihat:</span> <strong id="resultCount">0</strong></div>
