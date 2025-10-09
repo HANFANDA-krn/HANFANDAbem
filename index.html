@@ -61,8 +61,8 @@
   </header>
 
   <main class="container main">
-    <section class="map-wrapper">
-      <div class="map-frame" id="mapFrame">
+    <section class="map-wrapper" id="mapSection">
+      <div class="map-frame">
         <div id="map" role="region" aria-label="Peta habitat hewan"></div>
         <div class="legend">
           <span><span class="swatch marker"></span> Marker habitat</span>
@@ -70,8 +70,8 @@
         </div>
       </div>
 
-      <div id="mapOverlay" class="map-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="mapOverlayTitle">
-        <button id="mapOverlayClose" class="overlay-close" aria-label="Kembali ke peta">×</button>
+      <aside id="mapOverlay" class="map-overlay hidden" aria-live="polite">
+        <button id="mapOverlayClose" class="overlay-close" aria-label="Tutup panel data hewan">×</button>
         <div class="overlay-header">
           <div id="mapOverlayAvatar" class="avatar lg">🐾</div>
           <div>
@@ -80,7 +80,7 @@
           </div>
         </div>
         <div id="mapOverlayBody" class="overlay-body"></div>
-      </div>
+      </aside>
     </section>
 
     <section class="statusbar">
