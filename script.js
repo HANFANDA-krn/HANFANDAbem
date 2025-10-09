@@ -200,8 +200,7 @@ const els = {
   mapOverlayTitle: document.querySelector("#mapOverlayTitle"),
   mapOverlaySubtitle: document.querySelector("#mapOverlaySubtitle"),
   mapOverlayBody: document.querySelector("#mapOverlayBody"),
-  mapOverlayClose: document.querySelector("#mapOverlayClose"),
-  mapSection: document.querySelector("#mapSection")
+  mapOverlayClose: document.querySelector("#mapOverlayClose")
 };
 
 const state = {
@@ -320,7 +319,7 @@ function initEvents(){
 }
 
 /* =========================
-   Render kartu & chips
+   Rendering utama
    ========================= */
 function render(){
   const results = animals
@@ -427,7 +426,7 @@ function formatKg(kg){
 }
 
 /* =========================
-   Map & overlay info
+   Map rendering & interaksi
    ========================= */
 function renderMap(list){
   markerLayer.clearLayers();
@@ -493,6 +492,9 @@ function boundsFromAnimals(list){
   return coords.length ? L.latLngBounds(coords) : null;
 }
 
+/* =========================
+   Overlay kontrol
+   ========================= */
 function showOverlay(an, range){
   activeOverlayId = an.id;
   els.mapOverlayAvatar.textContent = an.emoji;
