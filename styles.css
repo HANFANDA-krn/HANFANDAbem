@@ -58,7 +58,7 @@ body{
   color:var(--text); font-weight:700; box-shadow:0 15px 30px rgba(88,177,255,.25); cursor:pointer;
 }
 .btn.ghost{ border:1px solid var(--line); background:rgba(255,255,255,.05); box-shadow:none; }
-.btn.full{ width:100%; text-align:center; justify-content:center; }
+.btn.full{ width:100%; justify-content:center; text-align:center; }
 
 .main{ padding:26px 0 60px; display:flex; flex-direction:column; gap:22px; }
 
@@ -71,6 +71,7 @@ body{
   background:var(--surface-opaque);
   box-shadow:var(--shadow);
 }
+.map-frame.hidden{ display:none; }
 #map{ width:100%; height:600px; }
 .leaflet-container{ background:#0c1222!important; }
 .leaflet-control-attribution{ background:rgba(9,13,22,.65)!important; color:#c7d3f1!important; border-top-left-radius:10px; border-top-right-radius:10px; }
@@ -83,40 +84,51 @@ body{
 .swatch.marker{ background:#ffd166; }
 .swatch.range{ background:rgba(88,177,255,.32); }
 
-/* Panel informasi tetap di depan peta */
-.map-info{
-  position:fixed;
-  top:118px;
-  right:24px;
-  z-index:220;
-  width:min(360px, calc(100% - 48px));
-  background:rgba(9,13,22,.95);
-  border:1px solid rgba(88,177,255,.46);
-  border-radius:18px;
-  box-shadow:0 28px 60px rgba(3,8,18,.55);
-  padding:18px;
+/* Overlay detail hewan */
+.map-overlay{
+  border-radius:var(--radius-xl);
+  border:1px solid rgba(88,177,255,.45);
+  background:rgba(12,18,32,.9);
+  box-shadow:0 30px 60px rgba(3,8,18,.55);
+  padding:24px;
+  min-height:600px;
   display:grid;
-  gap:14px;
-  max-height:calc(100vh - 140px);
-  overflow:auto;
-  backdrop-filter:blur(12px);
+  gap:18px;
 }
-.map-info.hidden{ display:none; }
-.map-info-close{
-  position:absolute; top:10px; right:10px;
-  width:34px; height:34px; border-radius:12px;
-  border:1px solid rgba(88,177,255,.42);
+.map-overlay.hidden{ display:none; }
+.overlay-close{
+  position:absolute; top:12px; right:12px;
+  width:40px; height:40px; border-radius:12px;
+  border:1px solid rgba(88,177,255,.45);
   background:rgba(255,255,255,.08); color:var(--text);
-  cursor:pointer; font-size:20px; display:grid; place-items:center;
+  font-size:22px; cursor:pointer;
+  display:grid; place-items:center;
 }
-.map-info-header{ display:flex; gap:12px; align-items:center; padding-right:34px; }
-.map-info-title{ margin:0; font:700 20px/1.2 "Space Grotesk"; }
-.map-info-subtitle{ margin:4px 0 0; font:600 13px/1.3 "Plus Jakarta Sans"; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; }
-.map-info-content{ display:grid; gap:10px; font-size:14px; color:#d7def2; }
-.map-info-content p{ margin:0; }
-.map-info-content .fact{ font-style:italic; color:#bbc5e1; }
+.overlay-header{ display:flex; gap:16px; align-items:center; padding-right:50px; }
+.overlay-title{ margin:0; font:700 26px/1.2 "Space Grotesk"; }
+.overlay-subtitle{ margin:6px 0 0; font:600 13px/1.3 "Plus Jakarta Sans"; color:var(--muted); text-transform:uppercase; letter-spacing:.12em; }
 
-/* Status bar & chips */
+.overlay-body{ display:grid; gap:18px; color:#d7def2; font-size:15px; }
+.overlay-tags{ display:flex; flex-wrap:wrap; gap:10px; }
+.overlay-tags .tag{
+  padding:6px 12px; border-radius:12px;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18);
+  font:600 11px/1 "Space Grotesk"; letter-spacing:.06em; text-transform:uppercase; color:#dbe4ff;
+}
+.overlay-teaser{ color:var(--muted); margin:0; }
+.overlay-details{
+  display:grid; gap:12px;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px;
+}
+.overlay-details .k{ font:700 12px/1 "Space Grotesk"; letter-spacing:.08em; text-transform:uppercase; color:rgba(231,236,245,.7); display:block; margin-bottom:4px; }
+.overlay-details .v{ font-weight:700; color:#e9f1ff; display:block; }
+.overlay-facts h3{ margin:0 0 8px; font:700 16px/1.2 "Space Grotesk"; }
+.overlay-facts ul{ margin:0; padding-left:20px; display:grid; gap:6px; color:#e7ecf5; }
+
 .statusbar{
   display:flex; justify-content:space-between; align-items:center; gap:12px;
   background:var(--surface-strong);
@@ -164,7 +176,6 @@ body{
   display:grid; place-items:center; font-size:32px;
 }
 .avatar.lg{ width:76px; height:76px; font-size:40px; }
-.avatar.sm{ width:46px; height:46px; font-size:26px; border-radius:14px; }
 .title .name{ font:700 20px/1.2 "Space Grotesk"; }
 .title .latin{ color:rgba(229,234,244,.6); font:600 13px/1.2 "Space Grotesk"; }
 .meta{ display:flex; gap:10px; flex-wrap:wrap; }
@@ -247,19 +258,10 @@ body{
   .control input, .control select{ width:100%; }
   #map{ height:480px; }
   .modal-grid{ grid-template-columns:repeat(2,1fr); }
-  .map-info{
-    top:102px;
-    right:16px;
-    left:16px;
-    width:auto;
-  }
+  .map-overlay{ min-height:480px; padding:20px; }
 }
 @media (max-width:600px){
   #map{ height:420px; }
   .modal-grid{ grid-template-columns:1fr; }
-  .map-info{
-    top:94px;
-    right:12px;
-    left:12px;
-  }
+  .map-overlay{ min-height:420px; padding:18px; }
 }
