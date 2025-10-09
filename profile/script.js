@@ -200,7 +200,8 @@ const els = {
   mapOverlayTitle: document.querySelector("#mapOverlayTitle"),
   mapOverlaySubtitle: document.querySelector("#mapOverlaySubtitle"),
   mapOverlayBody: document.querySelector("#mapOverlayBody"),
-  mapOverlayClose: document.querySelector("#mapOverlayClose")
+  mapOverlayClose: document.querySelector("#mapOverlayClose"),
+  mapBackButton: document.querySelector("#mapBackButton")
 };
 
 const state = {
@@ -294,6 +295,7 @@ function initEvents(){
   els.fitAll.addEventListener("click", fitAllBounds);
   els.fitVisible.addEventListener("click", fitVisibleBounds);
   els.mapOverlayClose.addEventListener("click", hideOverlay);
+  els.mapBackButton.addEventListener("click", hideOverlay);
 
   document.addEventListener("click", e=>{
     if(e.target.matches('[data-clear="country"]')){
@@ -527,11 +529,13 @@ function showOverlay(an, range){
   els.mapOverlayBody.appendChild(moreBtn);
 
   els.mapOverlay.classList.remove("hidden");
+  els.mapBackButton.classList.remove("hidden");
 }
 
 function hideOverlay(){
   if(els.mapOverlay.classList.contains("hidden")) return;
   els.mapOverlay.classList.add("hidden");
+  els.mapBackButton.classList.add("hidden");
   activeOverlayId = null;
 }
 
