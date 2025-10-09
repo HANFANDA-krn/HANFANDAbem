@@ -16,20 +16,19 @@
 *{ box-sizing:border-box; margin:0; }
 body{
   font-family:"Plus Jakarta Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:radial-gradient(140% 130% at 0 -20%,rgba(71,130,255,0.27) 0%,var(--bg) 45%);
+  background:radial-gradient(140% 130% at -10% -20%,rgba(71,130,255,0.27) 0%,var(--bg) 50%);
   color:var(--text);
   min-height:100vh;
 }
-
 .container{ max-width:1180px; margin:0 auto; padding:0 20px; }
 
 .site-header{
-  position:sticky; top:0; z-index:30;
+  position:sticky; top:0; z-index:40;
   padding:24px 0 18px;
-  background:linear-gradient(180deg,rgba(10,14,24,.95),rgba(10,14,24,.7));
+  background:linear-gradient(180deg,rgba(10,14,24,.95),rgba(10,14,24,.75));
   backdrop-filter:blur(16px);
   border-bottom:1px solid var(--line);
-  box-shadow:0 8px 28px rgba(2,6,16,.28);
+  box-shadow:0 10px 30px rgba(2,6,16,.28);
 }
 .header-inner{ display:flex; flex-direction:column; gap:18px; }
 .brand{ font:700 30px/1.1 "Space Grotesk",sans-serif; letter-spacing:.05em; }
@@ -59,25 +58,24 @@ body{
   color:var(--text); font-weight:700; box-shadow:0 15px 30px rgba(88,177,255,.25); cursor:pointer;
 }
 .btn.ghost{ border:1px solid var(--line); background:rgba(255,255,255,.05); box-shadow:none; }
+.btn.full{ width:100%; text-align:center; justify-content:center; }
 
 .main{ padding:26px 0 60px; display:flex; flex-direction:column; gap:22px; }
 
-.map-wrapper{
+.map-wrapper{ position:relative; }
+.map-frame{
   position:relative;
   border-radius:var(--radius-xl);
+  overflow:hidden;
   border:1px solid var(--line);
   background:var(--surface-opaque);
   box-shadow:var(--shadow);
-  overflow:hidden;
 }
-#map{
-  width:100%; height:600px;
-}
+#map{ width:100%; height:600px; }
 .leaflet-container{ background:#0c1222!important; }
 .leaflet-control-attribution{ background:rgba(9,13,22,.65)!important; color:#c7d3f1!important; border-top-left-radius:10px; border-top-right-radius:10px; }
-
 .legend{
-  position:absolute; left:16px; bottom:16px; z-index:80;
+  position:absolute; left:18px; bottom:18px; z-index:60;
   background:rgba(12,18,30,.82); padding:10px 12px; border-radius:14px; border:1px solid var(--line);
   display:flex; gap:12px; flex-wrap:wrap; font:600 13px/1 "Plus Jakarta Sans"; color:#dbe4ff;
 }
@@ -85,30 +83,40 @@ body{
 .swatch.marker{ background:#ffd166; }
 .swatch.range{ background:rgba(88,177,255,.32); }
 
+/* Panel informasi tetap di depan peta */
 .map-info{
-  position:absolute; right:18px; top:18px; z-index:120;
-  width:min(320px, calc(100% - 36px));
-  background:rgba(9,12,20,.9);
-  border:1px solid rgba(88,177,255,.42);
+  position:fixed;
+  top:118px;
+  right:24px;
+  z-index:220;
+  width:min(360px, calc(100% - 48px));
+  background:rgba(9,13,22,.95);
+  border:1px solid rgba(88,177,255,.46);
   border-radius:18px;
-  box-shadow:0 28px 60px rgba(2,8,20,.5);
-  padding:16px;
-  display:grid; gap:12px;
+  box-shadow:0 28px 60px rgba(3,8,18,.55);
+  padding:18px;
+  display:grid;
+  gap:14px;
+  max-height:calc(100vh - 140px);
+  overflow:auto;
+  backdrop-filter:blur(12px);
 }
 .map-info.hidden{ display:none; }
 .map-info-close{
   position:absolute; top:10px; right:10px;
-  width:32px; height:32px; border-radius:10px;
-  border:1px solid rgba(88,177,255,.4);
+  width:34px; height:34px; border-radius:12px;
+  border:1px solid rgba(88,177,255,.42);
   background:rgba(255,255,255,.08); color:var(--text);
-  cursor:pointer; font-size:18px; display:grid; place-items:center;
+  cursor:pointer; font-size:20px; display:grid; place-items:center;
 }
 .map-info-header{ display:flex; gap:12px; align-items:center; padding-right:34px; }
 .map-info-title{ margin:0; font:700 20px/1.2 "Space Grotesk"; }
-.map-info-subtitle{ margin:4px 0 0; font:600 13px/1.4 "Plus Jakarta Sans"; color:var(--muted); text-transform:uppercase; letter-spacing:.12em; }
-.map-info-content{ display:grid; gap:12px; font-size:14px; color:#d7def2; }
-.map-info-content .fact{ font-style:italic; color:#b7c2df; }
+.map-info-subtitle{ margin:4px 0 0; font:600 13px/1.3 "Plus Jakarta Sans"; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; }
+.map-info-content{ display:grid; gap:10px; font-size:14px; color:#d7def2; }
+.map-info-content p{ margin:0; }
+.map-info-content .fact{ font-style:italic; color:#bbc5e1; }
 
+/* Status bar & chips */
 .statusbar{
   display:flex; justify-content:space-between; align-items:center; gap:12px;
   background:var(--surface-strong);
@@ -132,6 +140,7 @@ body{
   display:grid; place-items:center; font-size:12px; cursor:pointer;
 }
 
+/* Grid kartu */
 .grid{
   display:grid; gap:18px;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
@@ -196,8 +205,9 @@ body{
 .site-footer{ padding:30px 0; border-top:1px solid var(--line); background:rgba(12,17,28,.6); }
 .foot-inner{ color:var(--muted); }
 
+/* Modal */
 .modal.hidden{ display:none; }
-.modal{ position:fixed; inset:0; z-index:240; }
+.modal{ position:fixed; inset:0; z-index:260; }
 .modal-backdrop{ position:absolute; inset:0; background:rgba(5,9,18,.68); }
 .modal-panel{
   position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
@@ -219,6 +229,7 @@ body{
 .modal-grid{ display:grid; gap:12px; grid-template-columns:repeat(3,1fr); }
 .facts-list{ margin:0; padding-left:20px; display:grid; gap:6px; color:var(--text); }
 
+/* Toast */
 .toast{ position:fixed; left:50%; bottom:20px; transform:translateX(-50%);
   padding:12px 16px; border-radius:var(--radius);
   border:1px solid var(--line); background:rgba(9,13,22,.93);
@@ -236,8 +247,19 @@ body{
   .control input, .control select{ width:100%; }
   #map{ height:480px; }
   .modal-grid{ grid-template-columns:repeat(2,1fr); }
+  .map-info{
+    top:102px;
+    right:16px;
+    left:16px;
+    width:auto;
+  }
 }
-@media (max-width:640px){
+@media (max-width:600px){
   #map{ height:420px; }
   .modal-grid{ grid-template-columns:1fr; }
+  .map-info{
+    top:94px;
+    right:12px;
+    left:12px;
+  }
 }
