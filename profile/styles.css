@@ -85,7 +85,6 @@ html{ scroll-padding-top:110px; }
 .swatch.marker{ background:#ffd166; }
 .swatch.range{ background:rgba(88,177,255,.32); }
 
-/* Tombol kembali di peta */
 .map-back{
   position:absolute;
   top:18px;
@@ -105,7 +104,6 @@ html{ scroll-padding-top:110px; }
 }
 .map-back.hidden{ display:none; }
 
-/* Overlay menutupi peta sepenuhnya */
 .map-overlay{
   position:absolute;
   inset:0;
@@ -159,7 +157,6 @@ html{ scroll-padding-top:110px; }
 .overlay-facts h3{ margin:0 0 8px; font:700 16px/1.2 "Space Grotesk"; }
 .overlay-facts ul{ margin:0; padding-left:20px; display:grid; gap:6px; color:#e7ecf5; }
 
-/* Statusbar & chips */
 .statusbar{
   display:flex; justify-content:space-between; align-items:center; gap:12px;
   background:var(--surface-strong);
@@ -183,7 +180,6 @@ html{ scroll-padding-top:110px; }
   display:grid; place-items:center; font-size:12px; cursor:pointer;
 }
 
-/* Grid kartu */
 .grid{
   display:grid; gap:18px;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
