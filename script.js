@@ -195,12 +195,13 @@ const els = {
   modalFacts: document.querySelector("#modalFacts"),
   modalIcon: document.querySelector("#modalIcon"),
   toast: document.querySelector("#toast"),
-  mapInfo: document.querySelector("#mapInfo"),
-  mapInfoAvatar: document.querySelector("#mapInfoAvatar"),
-  mapInfoTitle: document.querySelector("#mapInfoTitle"),
-  mapInfoSubtitle: document.querySelector("#mapInfoSubtitle"),
-  mapInfoContent: document.querySelector("#mapInfoContent"),
-  closeMapInfo: document.querySelector("#closeMapInfo")
+  mapFrame: document.querySelector("#mapFrame"),
+  mapOverlay: document.querySelector("#mapOverlay"),
+  mapOverlayAvatar: document.querySelector("#mapOverlayAvatar"),
+  mapOverlayTitle: document.querySelector("#mapOverlayTitle"),
+  mapOverlaySubtitle: document.querySelector("#mapOverlaySubtitle"),
+  mapOverlayBody: document.querySelector("#mapOverlayBody"),
+  mapOverlayClose: document.querySelector("#mapOverlayClose")
 };
 
 const state = {
@@ -216,7 +217,7 @@ animals.forEach(an => (an.countries||[]).forEach(iso => (COUNTRY_ANIMALS[iso] ||
 
 let map, markerLayer, rangeLayer;
 let filteredIds = new Set();
-let currentInfo = null;
+let currentOverlayId = null;
 
 /* =========================
    Init
@@ -293,7 +294,7 @@ function initEvents(){
   });
   els.fitAll.addEventListener("click", fitAllBounds);
   els.fitVisible.addEventListener("click", fitVisibleBounds);
-  els.closeMapInfo.addEventListener("click", hideMapInfo);
+  els.mapOverlayClose.addEventListener("click", hideMapOverlay);
 
   document.addEventListener("click", e=>{
     if(e.target.matches('[data-clear="country"]')){
@@ -306,10 +307,11 @@ function initEvents(){
       closeModal();
     }
   });
+
   window.addEventListener("keydown", e=>{
     if(e.key==="Escape"){
       closeModal();
-      hideMapInfo();
+      hideMapOverlay();
     }
     if(e.key==="/" && document.activeElement !== els.search){
       e.preventDefault();
@@ -334,6 +336,7 @@ function render(){
   if(state.country){
     els.countryChipText.textContent = `${isoToFlag(state.country)} ${(COUNTRY_NAMES[state.country]||state.country)}`;
   }
+
   els.searchChip.classList.toggle("hidden", !state.query);
   if(state.query){
     els.searchChipText.textContent = `“${state.query}”`;
@@ -342,7 +345,7 @@ function render(){
   els.cards.innerHTML = "";
   if(!results.length){
     els.empty.classList.remove("hidden");
-    hideMapInfo();
+    hideMapOverlay();
   }else{
     els.empty.classList.add("hidden");
     const frag = document.createDocumentFragment();
@@ -351,7 +354,7 @@ function render(){
   }
 
   renderMap(results);
-  ensureMapInfoVisibility();
+  ensureOverlayVisibility();
 }
 
 function buildCard(an){
@@ -373,12 +376,13 @@ function buildCard(an){
       <div class="kv"><span class="k">Berat</span><span class="v">${formatKg(an.weightKg)}</span></div>
       <div class="kv"><span class="k">Umur</span><span class="v">${an.lifespan} tahun</span></div>
     </div>
-    <button class="focus-btn" title="Fokus di peta">📍</button>
+    <button class="focus-btn" title="Tampilkan detail habitat">📍</button>
   `;
   card.addEventListener("click", e=>{
     if(e.target.matches(".focus-btn")){
-      focusAnimal(an);
-      showMapInfo(an, (an.ranges||[])[0] || null);
+      const firstRange = (an.ranges||[])[0] || null;
+      if(firstRange) focusAnimal(an);
+      showMapOverlay(an, firstRange);
       e.stopPropagation();
       return;
     }
@@ -435,7 +439,7 @@ function renderMap(list){
     (an.ranges||[]).forEach(range=>{
       if(state.showMarkers){
         const marker = L.marker([range.lat, range.lng], { title: `${an.name} — ${range.label}`, riseOnHover:true });
-        marker.on("click", ()=> showMapInfo(an, range));
+        marker.on("click", ()=> showMapOverlay(an, range));
         markerLayer.addLayer(marker);
       }
       if(state.showRanges){
@@ -447,7 +451,7 @@ function renderMap(list){
           fillColor:"#58b1ff",
           fillOpacity:0.12
         });
-        circle.on("click", ()=> showMapInfo(an, range));
+        circle.on("click", ()=> showMapOverlay(an, range));
         rangeLayer.addLayer(circle);
       }
     });
@@ -455,6 +459,7 @@ function renderMap(list){
 
   applyLayerVisibility();
 }
+
 function applyLayerVisibility(){
   if(state.showMarkers){ if(!map.hasLayer(markerLayer)) markerLayer.addTo(map); }
   else if(map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
@@ -491,49 +496,57 @@ function boundsFromAnimals(list){
 }
 
 /* =========================
-   Panel info map (fixed)
+   Overlay Map Detail
    ========================= */
-function showMapInfo(an, range){
-  currentInfo = { id: an.id, label: range ? range.label : null };
-
-  els.mapInfoAvatar.textContent = an.emoji;
-  els.mapInfoTitle.textContent = an.name;
-
-  const subtitle = range
+function showMapOverlay(an, range){
+  currentOverlayId = an.id;
+  els.mapOverlayAvatar.textContent = an.emoji;
+  els.mapOverlayTitle.textContent = an.name;
+  els.mapOverlaySubtitle.textContent = range
     ? `${range.label} • Radius ± ${(range.r||200)} km`
     : "Sebaran umum";
-  els.mapInfoSubtitle.textContent = subtitle;
 
-  const facts = an.facts && an.facts.length ? `<p class="fact">${an.facts[0]}</p>` : "";
+  const tags = (an.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("");
+  const facts = (an.facts||[]).map(f=>`<li>${f}</li>`).join("");
 
-  els.mapInfoContent.innerHTML = `
-    <p><strong>Habitat:</strong> ${an.habitat}</p>
-    <p><strong>Status:</strong> ${an.status}</p>
-    <p><strong>Makanan:</strong> ${an.diet}</p>
-    ${range ? `<p><strong>Lokasi:</strong> ${range.label}</p>` : ""}
-    ${facts}
+  els.mapOverlayBody.innerHTML = `
+    <div class="overlay-tags">${tags}</div>
+    <p class="overlay-teaser">${an.teaser}</p>
+    <div class="overlay-details">
+      <div><span class="k">Habitat</span><span class="v">${an.habitat}</span></div>
+      <div><span class="k">Makanan</span><span class="v">${an.diet}</span></div>
+      <div><span class="k">Status</span><span class="v">${an.status}</span></div>
+      <div><span class="k">Umur</span><span class="v">${an.lifespan} tahun</span></div>
+      <div><span class="k">Berat</span><span class="v">${formatKg(an.weightKg)}</span></div>
+      <div><span class="k">Tinggi/Panjang</span><span class="v">${an.length}</span></div>
+    </div>
+    ${facts ? `<div class="overlay-facts"><h3>Fakta Singkat</h3><ul>${facts}</ul></div>` : ""}
   `;
-
   const moreBtn = document.createElement("button");
   moreBtn.type = "button";
-  moreBtn.className = "btn ghost full";
-  moreBtn.textContent = "Detail selengkapnya";
+  moreBtn.className = "btn full";
+  moreBtn.textContent = "Buka detail lengkap";
   moreBtn.addEventListener("click", ()=> openModal(an), { once:true });
-  els.mapInfoContent.appendChild(moreBtn);
+  els.mapOverlayBody.appendChild(moreBtn);
 
-  els.mapInfo.classList.remove("hidden");
+  els.mapFrame.classList.add("hidden");
+  els.mapOverlay.classList.remove("hidden");
+  const wrapperTop = document.querySelector(".map-wrapper").getBoundingClientRect().top + window.scrollY;
+  window.scrollTo({ top: wrapperTop - 80, behavior:"smooth" });
 }
 
-function hideMapInfo(){
-  currentInfo = null;
-  els.mapInfo.classList.add("hidden");
-  els.mapInfoContent.innerHTML = "";
+function hideMapOverlay(){
+  if(els.mapOverlay.classList.contains("hidden")) return;
+  els.mapOverlay.classList.add("hidden");
+  els.mapFrame.classList.remove("hidden");
+  currentOverlayId = null;
+  setTimeout(()=> map && map.invalidateSize(), 120);
 }
 
-function ensureMapInfoVisibility(){
-  if(!currentInfo) return;
-  if(!filteredIds.has(currentInfo.id)){
-    hideMapInfo();
+function ensureOverlayVisibility(){
+  if(!currentOverlayId) return;
+  if(!filteredIds.has(currentOverlayId)){
+    hideMapOverlay();
   }
 }
 
@@ -558,7 +571,7 @@ function closeModal(){
 }
 
 /* =========================
-   Toast kecil
+   Toast
    ========================= */
 let toastTimer;
 function toast(msg){
