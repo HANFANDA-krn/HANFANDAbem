@@ -1,7 +1,7 @@
 "use strict";
 
 /* =========================
-   Dataset Hewan Darat
+   Dataset hewan darat
    ========================= */
 const animals = [
   { id:"harimau", emoji:"🐯", name:"Harimau", latin:"Panthera tigris",
@@ -164,7 +164,7 @@ const COUNTRY_NAMES = {
 };
 
 /* =========================
-   Elemen & State
+   Elemen & state
    ========================= */
 const els = {
   search: document.querySelector("#search"),
@@ -195,13 +195,13 @@ const els = {
   modalFacts: document.querySelector("#modalFacts"),
   modalIcon: document.querySelector("#modalIcon"),
   toast: document.querySelector("#toast"),
-  mapFrame: document.querySelector("#mapFrame"),
   mapOverlay: document.querySelector("#mapOverlay"),
   mapOverlayAvatar: document.querySelector("#mapOverlayAvatar"),
   mapOverlayTitle: document.querySelector("#mapOverlayTitle"),
   mapOverlaySubtitle: document.querySelector("#mapOverlaySubtitle"),
   mapOverlayBody: document.querySelector("#mapOverlayBody"),
-  mapOverlayClose: document.querySelector("#mapOverlayClose")
+  mapOverlayClose: document.querySelector("#mapOverlayClose"),
+  mapSection: document.querySelector("#mapSection")
 };
 
 const state = {
@@ -217,7 +217,7 @@ animals.forEach(an => (an.countries||[]).forEach(iso => (COUNTRY_ANIMALS[iso] ||
 
 let map, markerLayer, rangeLayer;
 let filteredIds = new Set();
-let currentOverlayId = null;
+let activeOverlayId = null;
 
 /* =========================
    Init
@@ -294,7 +294,7 @@ function initEvents(){
   });
   els.fitAll.addEventListener("click", fitAllBounds);
   els.fitVisible.addEventListener("click", fitVisibleBounds);
-  els.mapOverlayClose.addEventListener("click", hideMapOverlay);
+  els.mapOverlayClose.addEventListener("click", hideOverlay);
 
   document.addEventListener("click", e=>{
     if(e.target.matches('[data-clear="country"]')){
@@ -307,11 +307,10 @@ function initEvents(){
       closeModal();
     }
   });
-
   window.addEventListener("keydown", e=>{
     if(e.key==="Escape"){
       closeModal();
-      hideMapOverlay();
+      hideOverlay();
     }
     if(e.key==="/" && document.activeElement !== els.search){
       e.preventDefault();
@@ -321,7 +320,7 @@ function initEvents(){
 }
 
 /* =========================
-   Rendering utama
+   Render kartu & chips
    ========================= */
 function render(){
   const results = animals
@@ -336,7 +335,6 @@ function render(){
   if(state.country){
     els.countryChipText.textContent = `${isoToFlag(state.country)} ${(COUNTRY_NAMES[state.country]||state.country)}`;
   }
-
   els.searchChip.classList.toggle("hidden", !state.query);
   if(state.query){
     els.searchChipText.textContent = `“${state.query}”`;
@@ -345,7 +343,7 @@ function render(){
   els.cards.innerHTML = "";
   if(!results.length){
     els.empty.classList.remove("hidden");
-    hideMapOverlay();
+    hideOverlay();
   }else{
     els.empty.classList.add("hidden");
     const frag = document.createDocumentFragment();
@@ -354,7 +352,7 @@ function render(){
   }
 
   renderMap(results);
-  ensureOverlayVisibility();
+  ensureOverlayStillValid();
 }
 
 function buildCard(an){
@@ -376,13 +374,13 @@ function buildCard(an){
       <div class="kv"><span class="k">Berat</span><span class="v">${formatKg(an.weightKg)}</span></div>
       <div class="kv"><span class="k">Umur</span><span class="v">${an.lifespan} tahun</span></div>
     </div>
-    <button class="focus-btn" title="Tampilkan detail habitat">📍</button>
+    <button class="focus-btn" title="Tampilkan habitat di peta">📍</button>
   `;
   card.addEventListener("click", e=>{
     if(e.target.matches(".focus-btn")){
       const firstRange = (an.ranges||[])[0] || null;
       if(firstRange) focusAnimal(an);
-      showMapOverlay(an, firstRange);
+      showOverlay(an, firstRange);
       e.stopPropagation();
       return;
     }
@@ -429,7 +427,7 @@ function formatKg(kg){
 }
 
 /* =========================
-   Map rendering & interaksi
+   Map & overlay info
    ========================= */
 function renderMap(list){
   markerLayer.clearLayers();
@@ -439,7 +437,7 @@ function renderMap(list){
     (an.ranges||[]).forEach(range=>{
       if(state.showMarkers){
         const marker = L.marker([range.lat, range.lng], { title: `${an.name} — ${range.label}`, riseOnHover:true });
-        marker.on("click", ()=> showMapOverlay(an, range));
+        marker.on("click", ()=> showOverlay(an, range));
         markerLayer.addLayer(marker);
       }
       if(state.showRanges){
@@ -451,7 +449,7 @@ function renderMap(list){
           fillColor:"#58b1ff",
           fillOpacity:0.12
         });
-        circle.on("click", ()=> showMapOverlay(an, range));
+        circle.on("click", ()=> showOverlay(an, range));
         rangeLayer.addLayer(circle);
       }
     });
@@ -495,11 +493,8 @@ function boundsFromAnimals(list){
   return coords.length ? L.latLngBounds(coords) : null;
 }
 
-/* =========================
-   Overlay Map Detail
-   ========================= */
-function showMapOverlay(an, range){
-  currentOverlayId = an.id;
+function showOverlay(an, range){
+  activeOverlayId = an.id;
   els.mapOverlayAvatar.textContent = an.emoji;
   els.mapOverlayTitle.textContent = an.name;
   els.mapOverlaySubtitle.textContent = range
@@ -529,24 +524,19 @@ function showMapOverlay(an, range){
   moreBtn.addEventListener("click", ()=> openModal(an), { once:true });
   els.mapOverlayBody.appendChild(moreBtn);
 
-  els.mapFrame.classList.add("hidden");
   els.mapOverlay.classList.remove("hidden");
-  const wrapperTop = document.querySelector(".map-wrapper").getBoundingClientRect().top + window.scrollY;
-  window.scrollTo({ top: wrapperTop - 80, behavior:"smooth" });
 }
 
-function hideMapOverlay(){
+function hideOverlay(){
   if(els.mapOverlay.classList.contains("hidden")) return;
   els.mapOverlay.classList.add("hidden");
-  els.mapFrame.classList.remove("hidden");
-  currentOverlayId = null;
-  setTimeout(()=> map && map.invalidateSize(), 120);
+  activeOverlayId = null;
 }
 
-function ensureOverlayVisibility(){
-  if(!currentOverlayId) return;
-  if(!filteredIds.has(currentOverlayId)){
-    hideMapOverlay();
+function ensureOverlayStillValid(){
+  if(!activeOverlayId) return;
+  if(!filteredIds.has(activeOverlayId)){
+    hideOverlay();
   }
 }
 
@@ -571,7 +561,7 @@ function closeModal(){
 }
 
 /* =========================
-   Toast
+   Toast sederhana
    ========================= */
 let toastTimer;
 function toast(msg){
