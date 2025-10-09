@@ -8,79 +8,79 @@ const animals = [
     habitat:"Hutan hujan, sabana, lahan basah Asia", diet:"Karnivora (rusa, babi hutan, kerbau muda)",
     status:"Terancam Punah", lifespan:15, weightKg:220, length:"2,7–3,1 m",
     tags:["Asia","Karnivora","Kucing Besar"], teaser:"Pemburu soliter bergaris dengan auman menggetarkan hutan.",
-    facts:["Setiap harimau memiliki pola garis unik.","Perenang ulung, jarang kita temui di kucing besar lainnya.","Aumannya terdengar hingga 3 km."],
+    facts:["Pola garis unik seperti sidik jari.","Perenang ulung, tidak takut air.","Auman terdengar hingga 3 km."],
     ranges:[ {label:"India Tengah",lat:22.5,lng:79.5,r:600}, {label:"Siberia Timur",lat:46,lng:134,r:500}, {label:"Sumatra",lat:-1.65,lng:103.6,r:280} ],
     countries:["IN","RU","ID","BD","NP","MM","TH","LA","KH","VN","CN"]
   },
   { id:"singa", emoji:"🦁", name:"Singa", latin:"Panthera leo",
-    habitat:"Sabana Afrika & Gir (India)", diet:"Karnivora (antelope, zebra, kerbau)",
+    habitat:"Sabana Afrika & cagar Gir India", diet:"Karnivora (antelope, zebra, kerbau)",
     status:"Rentan", lifespan:14, weightKg:190, length:"2,4–2,8 m",
-    tags:["Afrika","Karnivora","Sosial"], teaser:"Ikon sabana yang berburu dalam pride.",
-    facts:["Satu-satunya kucing besar yang hidup dalam kelompok besar.","Auman terdengar hingga 8 km.","Betina mayoritas berburu."],
+    tags:["Afrika","Karnivora","Sosial"], teaser:"Ikon sabana yang berburu berkelompok.",
+    facts:["Pride dipimpin betina dewasa.","Auman terdengar hingga 8 km.","Jantan menjaga wilayah."],
     ranges:[ {label:"Serengeti",lat:-2,lng:36,r:820}, {label:"Kruger",lat:-23,lng:31,r:700}, {label:"Gir, India",lat:21,lng:70,r:220} ],
     countries:["KE","TZ","UG","ZA","BW","NA","ZM","MZ","IN"]
   },
   { id:"cheetah", emoji:"🐆", name:"Cheetah", latin:"Acinonyx jubatus",
     habitat:"Sabana terbuka Afrika", diet:"Karnivora (gazelle, impala muda)",
     status:"Rentan", lifespan:12, weightKg:65, length:"1,1–1,5 m",
-    tags:["Afrika","Karnivora","Sprinter"], teaser:"Mamalia tercepat di darat, sprinter dengan kuku semi-tidak ditarik.",
-    facts:["Mencapai 100 km/jam dalam 3 detik.","Berburu siang hari untuk menghindari singa/serigala.","Memiliki ekor panjang sebagai kemudi."],
+    tags:["Afrika","Karnivora","Sprinter"], teaser:"Sprinter darat tercepat dengan kuku semi-tidak ditarik.",
+    facts:["0–100 km/jam dalam 3 detik.","Berburu di siang hari.","Ekor panjang sebagai kemudi saat sprint."],
     ranges:[ {label:"Afrika Timur",lat:-2,lng:35,r:650}, {label:"Afrika Selatan",lat:-18,lng:22,r:780} ],
     countries:["KE","TZ","NA","ZA","BW"]
   },
   { id:"gajah", emoji:"🐘", name:"Gajah Afrika & Asia", latin:"Loxodonta africana / Elephas maximus",
     habitat:"Sabana, hutan, padang rumput Afrika & Asia", diet:"Herbivora (rumput, daun, kulit kayu)",
     status:"Rentan", lifespan:60, weightKg:4000, length:"2,7–3,3 m (tinggi bahu)",
-    tags:["Afrika","Asia","Herbivora Besar"], teaser:"Raksasa cerdas dengan struktur sosial kuat dan memori panjang.",
-    facts:["Mengomunikasikan pesan lewat infrasonik.","Belalai memiliki lebih dari 40 ribu otot.","Betina memimpin kawanan matrilineal."],
+    tags:["Afrika","Asia","Herbivora Besar"], teaser:"Raksasa cerdas dengan memori panjang dan struktur sosial kuat.",
+    facts:["Komunikasi infrasonik jarak puluhan km.","Belalai memiliki 40 ribu otot.","Betina memimpin kawanan matrilineal."],
     ranges:[ {label:"Afrika Sub-Sahara",lat:-2,lng:23,r:1450}, {label:"Asia Selatan–Tenggara",lat:10,lng:100,r:1200} ],
     countries:["KE","TZ","ZA","BW","IN","LK","TH","MY","MM","LA","KH"]
   },
   { id:"orangutan", emoji:"🦧", name:"Orangutan", latin:"Pongo abelii / Pongo pygmaeus",
     habitat:"Hutan hujan Sumatra & Kalimantan", diet:"Omnivora (buah, daun, serangga)",
     status:"Terancam Punah", lifespan:35, weightKg:50, length:"1,2–1,5 m",
-    tags:["Asia","Primata","Arboreal"], teaser:"Primata arboreal cerdas yang hidup menyendiri di kanopi tropis.",
-    facts:["Menggunakan ranting sebagai alat bantu.","Betina mengasuh anak 7–8 tahun.","Membangun sarang baru setiap malam."],
+    tags:["Asia","Primata","Arboreal"], teaser:"Primata arboreal cerdas yang hidup soliter di kanopi tropis.",
+    facts:["Menggunakan alat sederhana.","Betina mengasuh anak hingga 8 tahun.","Membangun sarang baru setiap malam."],
     ranges:[ {label:"Kalimantan",lat:0.5,lng:114,r:380}, {label:"Sumatra Utara",lat:2.8,lng:98.6,r:260} ],
     countries:["ID","MY"]
   },
   { id:"komodo", emoji:"🦎", name:"Komodo", latin:"Varanus komodoensis",
     habitat:"Savanna & hutan kering Nusa Tenggara Timur", diet:"Karnivora (bangkai, rusa, babi hutan)",
     status:"Rentan", lifespan:30, weightKg:70, length:"2–3 m",
-    tags:["Indonesia","Reptil","Predator"], teaser:"Kadal terbesar dunia dengan gigitan beracun dan penciuman tajam.",
-    facts:["Mendeteksi bau hingga 5 km.","Mampu berlari 20 km/jam saat mengejar mangsa.","Betina dapat bertelur secara partenogenesis."],
+    tags:["Indonesia","Reptil","Predator"], teaser:"Kadal terbesar dunia dengan air liur beracun.",
+    facts:["Mencium bau hingga 5 km.","Berburu dengan kombinasi racun dan bakteri.","Dapat bertelur tanpa pembuahan (partenogenesis)."],
     ranges:[ {label:"Pulau Komodo",lat:-8.57,lng:119.48,r:58}, {label:"Pulau Rinca",lat:-8.66,lng:119.73,r:44}, {label:"Flores Barat",lat:-8.71,lng:120.58,r:80} ],
     countries:["ID"]
   },
   { id:"tapir", emoji:"🐾", name:"Tapir Melayu", latin:"Tapirus indicus",
     habitat:"Hutan tropis Asia Tenggara", diet:"Herbivora (daun, buah, pucuk)",
     status:"Terancam Punah", lifespan:25, weightKg:250, length:"1,8–2,5 m",
-    tags:["Asia","Herbivora","Nokturnal"], teaser:"Mamalia pemalu bercorak hitam-putih kontras, aktif malam.",
-    facts:["Moncong fleksibel seperti belalai pendek.","Pandai berenang dan menyelam.","Memiliki selaput pada jari kaki."],
+    tags:["Asia","Herbivora","Nokturnal"], teaser:"Herbivora pemalu dengan pola hitam-putih kontras.",
+    facts:["Moncong fleksibel seperti belalai mini.","Pandai berenang.","Aktif malam, mengandalkan penciuman tajam."],
     ranges:[ {label:"Semenanjung Malaya",lat:4.2,lng:102,r:420}, {label:"Sumatra",lat:-0.5,lng:102.5,r:480}, {label:"Thailand Selatan",lat:9.5,lng:99.5,r:360} ],
     countries:["MY","TH","ID"]
   },
   { id:"kanguru", emoji:"🦘", name:"Kanguru Merah", latin:"Osphranter rufus",
-    habitat:"Sabana, semak belukar dan padang rumput Australia", diet:"Herbivora (rumput, daun)",
+    habitat:"Sabana & padang semak Australia", diet:"Herbivora (rumput, daun)",
     status:"Risiko Rendah", lifespan:20, weightKg:85, length:"1,5 m (tinggi)",
-    tags:["Australia","Marsupial","Pelompat"], teaser:"Marsupial terbesar dengan lompatan jauh dan ekor sebagai penyeimbang.",
-    facts:["Melompat hingga 9 m sekali lesatan.","Memiliki kantong untuk anak (joey).","Kaki belakang tidak bisa melangkah mundur."],
+    tags:["Australia","Marsupial","Pelompat"], teaser:"Marsupial terbesar dengan lompatan jauh dan ekor penyeimbang.",
+    facts:["Melompat hingga 9 m dalam sekali lesatan.","Joey tinggal di kantong ±6 bulan.","Kaki belakang tidak bisa melangkah mundur."],
     ranges:[ {label:"Australia Tengah",lat:-25,lng:133,r:1500} ],
     countries:["AU"]
   },
   { id:"koala", emoji:"🐨", name:"Koala", latin:"Phascolarctos cinereus",
-    habitat:"Hutan eukaliptus Australia timur", diet:"Herbivora (daun eukaliptus)",
+    habitat:"Hutan eukaliptus Australia Timur", diet:"Herbivora (daun eukaliptus)",
     status:"Rentan", lifespan:15, weightKg:12, length:"0,6–0,85 m",
-    tags:["Australia","Marsupial","Arboreal"], teaser:"Marsupial arboreal yang tidur hingga 20 jam per hari.",
-    facts:["Memiliki sidik jari mirip manusia.","Memilih daun rendah toksin.","Bergantung pada pohon, jarang turun ke tanah."],
+    tags:["Australia","Marsupial","Arboreal"], teaser:"Marsupial arboreal pemakan eukaliptus dengan pola tidur panjang.",
+    facts:["Sidik jari mirip manusia.","Memilih daun rendah toksin.","Menghabiskan 18–20 jam per hari untuk istirahat."],
     ranges:[ {label:"Queensland–NSW",lat:-27,lng:153,r:420}, {label:"Victoria",lat:-37,lng:145,r:300} ],
     countries:["AU"]
   },
   { id:"bison", emoji:"🦬", name:"Bison Amerika", latin:"Bison bison",
     habitat:"Padang rumput Amerika Utara", diet:"Herbivora (rumput)",
     status:"Risiko Rendah", lifespan:20, weightKg:900, length:"2–3,5 m",
-    tags:["Amerika Utara","Herbivora","Ikonik"], teaser:"Banteng besar Great Plains yang berhasil diselamatkan dari kepunahan.",
-    facts:["Populasi pulih berkat taman nasional.","Mampu berlari 55 km/jam.","Jantan dewasa bisa lebih dari 900 kg."],
+    tags:["Amerika Utara","Herbivora","Ikonik"], teaser:"Ikon Great Plains yang berhasil diselamatkan dari kepunahan.",
+    facts:["Populasi pulih lewat taman nasional.","Berat jantan >900 kg.","Lari hingga 55 km/jam meski berbobot besar."],
     ranges:[ {label:"Yellowstone",lat:44.6,lng:-110.5,r:220}, {label:"Great Plains",lat:49,lng:-99,r:320} ],
     countries:["US","CA"]
   },
@@ -88,70 +88,70 @@ const animals = [
     habitat:"Hutan bambu pegunungan Tiongkok", diet:"Herbivora (bambu)",
     status:"Rentan", lifespan:20, weightKg:100, length:"1,2–1,8 m",
     tags:["Asia","Herbivora","Ikonik"], teaser:"Ikon konservasi dengan pola hitam-putih khas dan diet bambu.",
-    facts:["Memiliki 'jempol palsu' untuk menggenggam bambu.","Menghabiskan 12+ jam sehari makan.","Populasi perlahan meningkat berkat perlindungan habitat."],
+    facts:["Memiliki 'jempol palsu' untuk menggenggam bambu.","Makan >12 jam per hari.","Populasi meningkat berkat perlindungan habitat."],
     ranges:[ {label:"Provinsi Sichuan",lat:31.5,lng:103.5,r:250} ],
     countries:["CN"]
   },
   { id:"jaguar", emoji:"🐆", name:"Jaguar", latin:"Panthera onca",
-    habitat:"Hutan hujan Amazon, rawa Pantanal, hutan riparian Amerika Latin", diet:"Karnivora (rusa, pecari, caiman)",
+    habitat:"Hutan hujan Amazon, rawa Pantanal, hutan riparian Amerika Latin", diet:"Karnivora (rusa, peccary, caiman)",
     status:"Hampir Terancam", lifespan:15, weightKg:100, length:"1,8 m",
-    tags:["Amerika Selatan","Karnivora","Kucing Besar"], teaser:"Predator utama Amazon dengan gigitan sangat kuat.",
-    facts:["Bisa berenang dan menyelam menghadang caiman.","Roset pada tubuh punya titik di tengah, berbeda dari macan tutul.","Memegang wilayah luas di tepi sungai."],
+    tags:["Amerika Selatan","Karnivora","Kucing Besar"], teaser:"Predator puncak Amazon dengan gigitan menembus cangkang kura-kura.",
+    facts:["Perenang dan penyelam andal.","Roset memiliki titik di tengah (beda dengan macan tutul).","Berburu di tepi sungai Pantanal."],
     ranges:[ {label:"Amazon Brasil",lat:-3,lng:-60,r:900}, {label:"Pantanal",lat:-16,lng:-57,r:450}, {label:"Orinoco",lat:6,lng:-66,r:380} ],
     countries:["BR","CO","VE","PE","BO"]
   },
   { id:"kapibara", emoji:"🦫", name:"Kapibara", latin:"Hydrochoerus hydrochaeris",
     habitat:"Padang banjir, hutan riparian Amerika Selatan", diet:"Herbivora (rumput, tanaman air)",
     status:"Risiko Rendah", lifespan:10, weightKg:60, length:"1–1,3 m",
-    tags:["Amerika Selatan","Herbivora","Semi Akuatik"], teaser:"Rodensia terbesar dunia yang hidup berkelompok dekat perairan.",
-    facts:["Tubuh besar membantu mengatur suhu di air.","Berkomunikasi lewat dengkuran dan siulan.","Sering menjadi mangsa jaguar."],
+    tags:["Amerika Selatan","Herbivora","Semi Akuatik"], teaser:"Rodensia terbesar dunia yang betah berendam di perairan.",
+    facts:["Tubuh besar membantu regulasi suhu.","Komunikasi lewat dengkuran/siulan.","Sering hidup berdekatan dengan jaguar."],
     ranges:[ {label:"Brasil Tengah",lat:-11,lng:-55,r:600}, {label:"Argentina Utara",lat:-26,lng:-58,r:400}, {label:"Kolombia Timur",lat:5,lng:-72,r:360} ],
     countries:["BR","AR","BO","PY","CO"]
   },
   { id:"okapi", emoji:"🦓", name:"Okapi", latin:"Okapia johnstoni",
     habitat:"Hutan hujan Republik Demokratik Kongo", diet:"Herbivora (daun, pucuk, jamur)",
     status:"Terancam Punah", lifespan:25, weightKg:250, length:"2,0 m",
-    tags:["Afrika","Herbivora","Endemik"], teaser:"Kerabat jerapah endemik Kongo dengan pola mirip zebra.",
-    facts:["Bau unik untuk komunikasi antar okapi.","Lidah bisa menjilat telinga sendiri untuk kebersihan.","Menjadi indikator kesehatan hutan Ituri."],
+    tags:["Afrika","Herbivora","Endemik"], teaser:"Kerabat jerapah endemik Ituri dengan garis mirip zebra.",
+    facts:["Bau unik bantu komunikasi.","Lidah bisa menjilat telinga sendiri.","Indikator kesehatan hutan tropis Kongo."],
     ranges:[ {label:"Hutan Ituri",lat:0.8,lng:28.5,r:240} ],
     countries:["CD"]
   },
   { id:"lynx", emoji:"🐱", name:"Lynx Eurasia", latin:"Lynx lynx",
     habitat:"Hutan boreal dan pegunungan Eurasia", diet:"Karnivora (rusa kecil, kelinci salju, rodensia)",
     status:"Risiko Rendah", lifespan:17, weightKg:26, length:"0,8–1,3 m",
-    tags:["Eurasia","Karnivora","Soliter"], teaser:"Kucing liar bertelinga jumbai dengan penglihatan tajam senja hari.",
-    facts:["Mampu menerkam mangsa dari pohon.","Populasi pulih di Eropa Barat lewat reintroduksi.","Berburu dalam jarak 50–70 km² per individu."],
+    tags:["Eurasia","Karnivora","Soliter"], teaser:"Kucing liar bertelinga jumbai dengan penglihatan senja tajam.",
+    facts:["Menyergap dari pohon / semak rapat.","Populasi dipulihkan di Eropa Barat.","Mengontrol populasi ungulata kecil."],
     ranges:[ {label:"Skandinavia",lat:63,lng:15,r:520}, {label:"Karpatia",lat:48,lng:24,r:340}, {label:"Siberia Barat",lat:59,lng:85,r:620} ],
     countries:["RU","SE","FI","PL","DE","CZ"]
   },
   { id:"snowleopard", emoji:"🐆", name:"Macan Tutul Salju", latin:"Panthera uncia",
     habitat:"Pegunungan Himalaya & Asia Tengah hingga 5.500 m", diet:"Karnivora (bharal, ibex, marmot)",
-    status:"Rentan", lifespan:15, weightKg:45, length:"0,9–1,2 m (tubuh) + ekor 1 m",
-    tags:["Asia Tengah","Karnivora","Pegunungan"], teaser:"Kucing besar pemalu penghuni tebing bersalju curam.",
-    facts:["Ekor panjang sebagai penyeimbang & selimut.","Bisa melompat 15 m antar tebing.","Populasi tersebar luas namun rendah."],
+    status:"Rentan", lifespan:15, weightKg:45, length:"0,9–1,2 m + ekor 1 m",
+    tags:["Asia Tengah","Karnivora","Pegunungan"], teaser:"Predator pemalu penghuni tebing bersalju curam.",
+    facts:["Ekor panjang sebagai penyeimbang dan selimut.","Lompatan 15 m antar tebing.","Populasi tersebar luas tapi rendah."],
     ranges:[ {label:"Trans-Himalaya",lat:31,lng:79,r:420}, {label:"Altai",lat:48,lng:90,r:380}, {label:"Tianshan",lat:42,lng:78,r:360} ],
     countries:["CN","IN","NP","BT","PK"]
   },
   { id:"moose", emoji:"🫎", name:"Moose", latin:"Alces alces",
     habitat:"Taiga, rawa, hutan boreal Amerika Utara & Eurasia", diet:"Herbivora (ranting willow, tanaman air)",
     status:"Risiko Rendah", lifespan:20, weightKg:550, length:"2,4 m (tinggi bahu jantan)",
-    tags:["Belahan Utara","Herbivora","Ungulata"], teaser:"Ungulata raksasa bertanduk palang khas dan ahli berenang.",
-    facts:["Menyelam 5 m untuk mencari tanaman air.","Tanduk jantan rontok setiap tahun.","Aktif menjelang senja dan fajar."],
+    tags:["Belahan Utara","Herbivora","Ungulata"], teaser:"Ungulata raksasa bertanduk palang, jago berenang dan menyelam.",
+    facts:["Menyelam hingga 5 m mencari tanaman air.","Tanduk jantan rontok tiap tahun.","Aktif menjelang senja dan fajar."],
     ranges:[ {label:"Skandinavia",lat:61,lng:17,r:520}, {label:"Quebec",lat:52,lng:-71,r:640}, {label:"Alaska",lat:63,lng:-150,r:700} ],
     countries:["CA","US","NO","SE","FI","RU"]
   },
   { id:"polarfox", emoji:"🦊", name:"Rubah Arktik", latin:"Vulpes lagopus",
     habitat:"Tundra Arktik", diet:"Omnivora (lemming, burung laut, bangkai)",
     status:"Risiko Rendah", lifespan:9, weightKg:4, length:"0,5–0,7 m",
-    tags:["Arktik","Omnivora","Adaptif"], teaser:"Mamalia kecil dengan bulu berubah warna menyesuaikan musim.",
-    facts:["Bulu cokelat di musim panas, putih di musim dingin.","Pendengaran ultra tajam untuk mendeteksi lemming.","Mengikuti beruang kutub mencari sisa mangsa."],
+    tags:["Arktik","Omnivora","Adaptif"], teaser:"Mamalia kecil dengan bulu berubah warna mengikuti musim.",
+    facts:["Bulu putih di musim dingin, cokelat di musim panas.","Pendengaran tajam mendeteksi mangsa di bawah salju.","Mengikuti beruang kutub untuk bangkai."],
     ranges:[ {label:"Svalbard",lat:79,lng:15,r:220}, {label:"Taimyr",lat:74,lng:100,r:360}, {label:"Nunavut",lat:70,lng:-95,r:330} ],
     countries:["NO","RU","CA","US"]
   }
 ];
 
 /* =========================
-   Konfigurasi negara (nama)
+   Konfigurasi negara
    ========================= */
 const COUNTRY_NAMES = {
   IN:"India", RU:"Rusia", ID:"Indonesia", BD:"Bangladesh", NP:"Nepal", MM:"Myanmar", TH:"Thailand", LA:"Laos", KH:"Kamboja", VN:"Vietnam", CN:"Tiongkok",
@@ -164,7 +164,7 @@ const COUNTRY_NAMES = {
 };
 
 /* =========================
-   State & Helper
+   Element & State
    ========================= */
 const els = {
   search: document.querySelector("#search"),
@@ -194,7 +194,13 @@ const els = {
   modalLength: document.querySelector("#modalLength"),
   modalFacts: document.querySelector("#modalFacts"),
   modalIcon: document.querySelector("#modalIcon"),
-  toast: document.querySelector("#toast")
+  toast: document.querySelector("#toast"),
+  mapInfo: document.querySelector("#mapInfo"),
+  mapInfoAvatar: document.querySelector("#mapInfoAvatar"),
+  mapInfoTitle: document.querySelector("#mapInfoTitle"),
+  mapInfoSubtitle: document.querySelector("#mapInfoSubtitle"),
+  mapInfoContent: document.querySelector("#mapInfoContent"),
+  closeMapInfo: document.querySelector("#closeMapInfo")
 };
 
 const state = {
@@ -206,26 +212,22 @@ const state = {
 };
 
 const COUNTRY_ANIMALS = {};
-animals.forEach(a=>{
-  (a.countries||[]).forEach(iso=>{
-    (COUNTRY_ANIMALS[iso] ||= []).push(a.id);
-  });
-});
+animals.forEach(an => (an.countries||[]).forEach(iso => (COUNTRY_ANIMALS[iso] ||= []).push(an.id)));
 
 let map, markerLayer, rangeLayer;
-let filteredSet = new Set();
+let filteredIds = new Set();
 
 /* =========================
-   Inisialisasi
+   Init
    ========================= */
-document.addEventListener("DOMContentLoaded", ()=>{
-  initSelect();
+document.addEventListener("DOMContentLoaded", () => {
+  buildCountrySelect();
   initMap();
   initEvents();
   render();
 });
 
-function initSelect(){
+function buildCountrySelect(){
   const isos = Object.keys(COUNTRY_ANIMALS).sort((a,b)=> (COUNTRY_NAMES[a]||a).localeCompare(COUNTRY_NAMES[b]||b,'id'));
   const frag = document.createDocumentFragment();
   const optAll = document.createElement("option");
@@ -290,6 +292,7 @@ function initEvents(){
   });
   els.fitAll.addEventListener("click", fitAllBounds);
   els.fitVisible.addEventListener("click", fitVisibleBounds);
+  els.closeMapInfo.addEventListener("click", hideMapInfo);
   document.addEventListener("click", e=>{
     if(e.target.matches('[data-clear="country"]')){
       state.country=""; els.countrySelect.value=""; render();
@@ -311,36 +314,33 @@ function initEvents(){
 }
 
 /* =========================
-   Render
+   Render Cards + Chips
    ========================= */
 function render(){
   const results = animals
     .filter(matchesQuery)
     .filter(matchesCountry)
     .sort(bySort);
-  filteredSet = new Set(results.map(a=>a.id));
+
+  filteredIds = new Set(results.map(a=>a.id));
   els.resultCount.textContent = results.length;
 
-  // chips
+  els.countryChip.classList.toggle("hidden", !state.country);
   if(state.country){
     els.countryChipText.textContent = `${isoToFlag(state.country)} ${(COUNTRY_NAMES[state.country]||state.country)}`;
-    els.countryChip.classList.remove("hidden");
-  }else els.countryChip.classList.add("hidden");
+  }
+  els.searchChip.classList.toggle("hidden", !state.query);
   if(state.query){
     els.searchChipText.textContent = `“${state.query}”`;
-    els.searchChip.classList.remove("hidden");
-  }else els.searchChip.classList.add("hidden");
+  }
 
-  // cards
   els.cards.innerHTML = "";
   if(!results.length){
     els.empty.classList.remove("hidden");
   }else{
     els.empty.classList.add("hidden");
     const frag = document.createDocumentFragment();
-    results.forEach(an=>{
-      frag.appendChild(buildCard(an));
-    });
+    results.forEach(an => frag.appendChild(buildCard(an)));
     els.cards.appendChild(frag);
   }
 
@@ -359,9 +359,7 @@ function buildCard(an){
         <div class="latin">${an.latin}</div>
       </div>
     </div>
-    <div class="meta">
-      ${an.tags.map(t=>`<span class="tag">${t}</span>`).join("")}
-    </div>
+    <div class="meta">${an.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
     <p class="desc">${an.teaser}</p>
     <div class="stats">
       <div class="kv"><span class="k">Status</span><span class="v">${an.status}</span></div>
@@ -388,7 +386,7 @@ function buildCard(an){
 }
 
 /* =========================
-   Filter Helpers
+   Filtering + Sorting Helpers
    ========================= */
 function matchesQuery(an){
   if(!state.query) return true;
@@ -419,30 +417,29 @@ function formatKg(kg){
 }
 
 /* =========================
-   Peta
+   Map rendering
    ========================= */
 function renderMap(list){
   markerLayer.clearLayers();
   rangeLayer.clearLayers();
 
   list.forEach(an=>{
-    (an.ranges||[]).forEach(r=>{
+    (an.ranges||[]).forEach(range=>{
       if(state.showMarkers){
-        const marker = L.marker([r.lat, r.lng], { title: an.name });
-        marker.bindPopup(`<strong>${an.emoji} ${an.name}</strong><br>${r.label}`);
-        marker.on("click", ()=> openModal(an));
+        const marker = L.marker([range.lat, range.lng], { title: `${an.name} — ${range.label}`, riseOnHover:true });
+        marker.on("click", ()=> showMapInfo(an, range));
         markerLayer.addLayer(marker);
       }
       if(state.showRanges){
-        const circle = L.circle([r.lat, r.lng], {
-          radius: (r.r||200)*1000,
+        const circle = L.circle([range.lat, range.lng], {
+          radius:(range.r||200)*1000,
           color:"#58b1ff",
           weight:1,
-          opacity:0.6,
+          opacity:0.7,
           fillColor:"#58b1ff",
           fillOpacity:0.12
         });
-        circle.bindTooltip(`${an.name} • ${r.label}<br>Radius ± ${r.r||200} km`);
+        circle.on("click", ()=> showMapInfo(an, range));
         rangeLayer.addLayer(circle);
       }
     });
@@ -452,16 +449,11 @@ function renderMap(list){
 }
 
 function applyLayerVisibility(){
-  if(state.showMarkers){
-    if(!map.hasLayer(markerLayer)) markerLayer.addTo(map);
-  }else{
-    if(map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
-  }
-  if(state.showRanges){
-    if(!map.hasLayer(rangeLayer)) rangeLayer.addTo(map);
-  }else{
-    if(map.hasLayer(rangeLayer)) map.removeLayer(rangeLayer);
-  }
+  if(state.showMarkers){ if(!map.hasLayer(markerLayer)) markerLayer.addTo(map); }
+  else if(map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
+
+  if(state.showRanges){ if(!map.hasLayer(rangeLayer)) rangeLayer.addTo(map); }
+  else if(map.hasLayer(rangeLayer)) map.removeLayer(rangeLayer);
 }
 
 function fitAllBounds(){
@@ -469,13 +461,13 @@ function fitAllBounds(){
   if(bounds) map.fitBounds(bounds, { padding:[30,30] });
 }
 function fitVisibleBounds(){
-  const visible = animals.filter(a=>filteredSet.has(a.id));
+  const visible = animals.filter(a=>filteredIds.has(a.id));
   if(!visible.length){
     toast("Tidak ada habitat untuk difokuskan.");
     return;
   }
   const bounds = boundsFromAnimals(visible);
-  if(bounds) map.fitBounds(bounds, { padding:[30,30] });
+  if(bounds) map.fitBounds(bounds, { padding:[40,40], maxZoom:6 });
 }
 function focusAnimal(an){
   if(!an || !an.ranges || !an.ranges.length){
@@ -483,16 +475,37 @@ function focusAnimal(an){
     return;
   }
   const bounds = boundsFromAnimals([an]);
-  if(bounds) map.fitBounds(bounds, { maxZoom:6, padding:[40,40] });
+  if(bounds) map.fitBounds(bounds, { padding:[40,40], maxZoom:6 });
 }
+
 function boundsFromAnimals(list){
   const coords = [];
-  list.forEach(an=>{
-    (an.ranges||[]).forEach(r=>{
-      coords.push([r.lat, r.lng]);
-    });
-  });
+  list.forEach(an => (an.ranges||[]).forEach(range => coords.push([range.lat, range.lng])));
   return coords.length ? L.latLngBounds(coords) : null;
+}
+
+/* =========================
+   Map Info Overlay
+   ========================= */
+function showMapInfo(an, range){
+  els.mapInfoAvatar.textContent = an.emoji;
+  els.mapInfoTitle.textContent = an.name;
+  els.mapInfoSubtitle.textContent = `${range.label} • Radius ± ${(range.r||200)} km`;
+  els.mapInfoContent.innerHTML = `
+    <p><strong>Habitat:</strong> ${an.habitat}</p>
+    <p><strong>Status:</strong> ${an.status}</p>
+    <p><strong>Makanan:</strong> ${an.diet}</p>
+    <p class="fact">${an.facts?.[0] || ""}</p>
+    <button class="btn ghost map-info-more" data-id="${an.id}">Detail selengkapnya</button>
+  `;
+  els.mapInfo.classList.remove("hidden");
+
+  const moreBtn = els.mapInfo.querySelector(".map-info-more");
+  moreBtn.addEventListener("click", ()=> openModal(an), { once:true });
+}
+function hideMapInfo(){
+  els.mapInfo.classList.add("hidden");
+  els.mapInfoContent.innerHTML = "";
 }
 
 /* =========================
