@@ -164,7 +164,7 @@ const COUNTRY_NAMES = {
 };
 
 /* =========================
-   Element & State
+   Elemen & State
    ========================= */
 const els = {
   search: document.querySelector("#search"),
@@ -216,6 +216,7 @@ animals.forEach(an => (an.countries||[]).forEach(iso => (COUNTRY_ANIMALS[iso] ||
 
 let map, markerLayer, rangeLayer;
 let filteredIds = new Set();
+let currentInfo = null;
 
 /* =========================
    Init
@@ -293,6 +294,7 @@ function initEvents(){
   els.fitAll.addEventListener("click", fitAllBounds);
   els.fitVisible.addEventListener("click", fitVisibleBounds);
   els.closeMapInfo.addEventListener("click", hideMapInfo);
+
   document.addEventListener("click", e=>{
     if(e.target.matches('[data-clear="country"]')){
       state.country=""; els.countrySelect.value=""; render();
@@ -305,7 +307,10 @@ function initEvents(){
     }
   });
   window.addEventListener("keydown", e=>{
-    if(e.key==="Escape") closeModal();
+    if(e.key==="Escape"){
+      closeModal();
+      hideMapInfo();
+    }
     if(e.key==="/" && document.activeElement !== els.search){
       e.preventDefault();
       els.search.focus();
@@ -314,7 +319,7 @@ function initEvents(){
 }
 
 /* =========================
-   Render Cards + Chips
+   Rendering utama
    ========================= */
 function render(){
   const results = animals
@@ -337,6 +342,7 @@ function render(){
   els.cards.innerHTML = "";
   if(!results.length){
     els.empty.classList.remove("hidden");
+    hideMapInfo();
   }else{
     els.empty.classList.add("hidden");
     const frag = document.createDocumentFragment();
@@ -345,6 +351,7 @@ function render(){
   }
 
   renderMap(results);
+  ensureMapInfoVisibility();
 }
 
 function buildCard(an){
@@ -371,6 +378,7 @@ function buildCard(an){
   card.addEventListener("click", e=>{
     if(e.target.matches(".focus-btn")){
       focusAnimal(an);
+      showMapInfo(an, (an.ranges||[])[0] || null);
       e.stopPropagation();
       return;
     }
@@ -386,7 +394,7 @@ function buildCard(an){
 }
 
 /* =========================
-   Filtering + Sorting Helpers
+   Filter helper
    ========================= */
 function matchesQuery(an){
   if(!state.query) return true;
@@ -417,7 +425,7 @@ function formatKg(kg){
 }
 
 /* =========================
-   Map rendering
+   Map rendering & interaksi
    ========================= */
 function renderMap(list){
   markerLayer.clearLayers();
@@ -447,7 +455,6 @@ function renderMap(list){
 
   applyLayerVisibility();
 }
-
 function applyLayerVisibility(){
   if(state.showMarkers){ if(!map.hasLayer(markerLayer)) markerLayer.addTo(map); }
   else if(map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
@@ -477,7 +484,6 @@ function focusAnimal(an){
   const bounds = boundsFromAnimals([an]);
   if(bounds) map.fitBounds(bounds, { padding:[40,40], maxZoom:6 });
 }
-
 function boundsFromAnimals(list){
   const coords = [];
   list.forEach(an => (an.ranges||[]).forEach(range => coords.push([range.lat, range.lng])));
@@ -485,31 +491,54 @@ function boundsFromAnimals(list){
 }
 
 /* =========================
-   Map Info Overlay
+   Panel info map (fixed)
    ========================= */
 function showMapInfo(an, range){
+  currentInfo = { id: an.id, label: range ? range.label : null };
+
   els.mapInfoAvatar.textContent = an.emoji;
   els.mapInfoTitle.textContent = an.name;
-  els.mapInfoSubtitle.textContent = `${range.label} • Radius ± ${(range.r||200)} km`;
+
+  const subtitle = range
+    ? `${range.label} • Radius ± ${(range.r||200)} km`
+    : "Sebaran umum";
+  els.mapInfoSubtitle.textContent = subtitle;
+
+  const facts = an.facts && an.facts.length ? `<p class="fact">${an.facts[0]}</p>` : "";
+
   els.mapInfoContent.innerHTML = `
     <p><strong>Habitat:</strong> ${an.habitat}</p>
     <p><strong>Status:</strong> ${an.status}</p>
     <p><strong>Makanan:</strong> ${an.diet}</p>
-    <p class="fact">${an.facts?.[0] || ""}</p>
-    <button class="btn ghost map-info-more" data-id="${an.id}">Detail selengkapnya</button>
+    ${range ? `<p><strong>Lokasi:</strong> ${range.label}</p>` : ""}
+    ${facts}
   `;
-  els.mapInfo.classList.remove("hidden");
 
-  const moreBtn = els.mapInfo.querySelector(".map-info-more");
+  const moreBtn = document.createElement("button");
+  moreBtn.type = "button";
+  moreBtn.className = "btn ghost full";
+  moreBtn.textContent = "Detail selengkapnya";
   moreBtn.addEventListener("click", ()=> openModal(an), { once:true });
+  els.mapInfoContent.appendChild(moreBtn);
+
+  els.mapInfo.classList.remove("hidden");
 }
+
 function hideMapInfo(){
+  currentInfo = null;
   els.mapInfo.classList.add("hidden");
   els.mapInfoContent.innerHTML = "";
 }
 
+function ensureMapInfoVisibility(){
+  if(!currentInfo) return;
+  if(!filteredIds.has(currentInfo.id)){
+    hideMapInfo();
+  }
+}
+
 /* =========================
-   Modal
+   Modal detail
    ========================= */
 function openModal(an){
   els.modalTitle.textContent = an.name;
@@ -529,7 +558,7 @@ function closeModal(){
 }
 
 /* =========================
-   Toast
+   Toast kecil
    ========================= */
 let toastTimer;
 function toast(msg){
