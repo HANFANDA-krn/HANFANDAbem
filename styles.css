@@ -20,7 +20,7 @@ body{
   color:var(--text);
   min-height:100vh;
 }
-html{ scroll-padding-top:96px; }
+html{ scroll-padding-top:110px; }
 
 .container{ max-width:1180px; margin:0 auto; padding:0 20px; }
 
@@ -63,10 +63,7 @@ html{ scroll-padding-top:96px; }
 .btn.full{ width:100%; justify-content:center; text-align:center; }
 
 .main{ padding:26px 0 60px; display:flex; flex-direction:column; gap:22px; }
-.map-wrapper{
-  position:relative;
-  scroll-margin-top:100px;
-}
+.map-wrapper{ position:relative; scroll-margin-top:110px; }
 .map-frame{
   position:relative;
   border-radius:var(--radius-xl);
@@ -74,12 +71,13 @@ html{ scroll-padding-top:96px; }
   border:1px solid var(--line);
   background:var(--surface-opaque);
   box-shadow:var(--shadow);
+  min-height:420px;
 }
 #map{ width:100%; height:600px; }
 .leaflet-container{ background:#0c1222!important; }
 .leaflet-control-attribution{ background:rgba(9,13,22,.65)!important; color:#c7d3f1!important; border-top-left-radius:10px; border-top-right-radius:10px; }
 .legend{
-  position:absolute; left:18px; bottom:18px; z-index:60;
+  position:absolute; left:18px; bottom:18px; z-index:40;
   background:rgba(12,18,30,.82); padding:10px 12px; border-radius:14px; border:1px solid var(--line);
   display:flex; gap:12px; flex-wrap:wrap; font:600 13px/1 "Plus Jakarta Sans"; color:#dbe4ff;
 }
@@ -87,34 +85,40 @@ html{ scroll-padding-top:96px; }
 .swatch.marker{ background:#ffd166; }
 .swatch.range{ background:rgba(88,177,255,.32); }
 
-/* Overlay info selalu di depan peta */
+/* Overlay menutupi peta sepenuhnya */
 .map-overlay{
   position:absolute;
-  top:24px;
-  right:24px;
-  width:min(360px,calc(100% - 48px));
-  background:rgba(9,12,21,.92);
-  border:1px solid rgba(88,177,255,.45);
-  border-radius:18px;
-  box-shadow:0 24px 55px rgba(3,8,18,.55);
-  padding:20px 20px 22px;
-  display:grid;
-  gap:16px;
-  z-index:120;
+  inset:0;
+  background:rgba(8,12,22,0.94);
+  backdrop-filter:blur(8px);
+  border-radius:var(--radius-xl);
+  border:1px solid rgba(88,177,255,.4);
+  box-shadow:0 28px 60px rgba(3,8,18,.55);
+  padding:28px 24px;
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+  z-index:100;
 }
 .map-overlay.hidden{ display:none; }
 .overlay-close{
-  position:absolute; top:12px; right:12px;
-  width:34px; height:34px; border-radius:12px;
-  border:1px solid rgba(88,177,255,.4);
+  position:absolute; top:16px; right:16px;
+  width:40px; height:40px; border-radius:12px;
+  border:1px solid rgba(88,177,255,.45);
   background:rgba(255,255,255,.08); color:var(--text);
-  cursor:pointer; font-size:20px;
-  display:grid; place-items:center;
+  font-size:22px; cursor:pointer; display:grid; place-items:center;
 }
-.overlay-header{ display:flex; gap:12px; align-items:center; padding-right:46px; }
-.overlay-title{ margin:0; font:700 22px/1.2 "Space Grotesk"; }
+.overlay-header{ display:flex; gap:18px; align-items:center; padding-right:60px; }
+.overlay-title{ margin:0; font:700 26px/1.2 "Space Grotesk"; }
 .overlay-subtitle{ margin:6px 0 0; font:600 13px/1.3 "Plus Jakarta Sans"; color:var(--muted); text-transform:uppercase; letter-spacing:.12em; }
-.overlay-body{ display:grid; gap:14px; color:#dfe6fa; font-size:14px; }
+.overlay-body{
+  flex:1;
+  overflow:auto;
+  display:grid;
+  gap:18px;
+  color:#dfe6fa;
+  font-size:14px;
+}
 .overlay-tags{ display:flex; flex-wrap:wrap; gap:10px; }
 .overlay-tags .tag{
   padding:6px 10px; border-radius:12px;
@@ -123,19 +127,19 @@ html{ scroll-padding-top:96px; }
 }
 .overlay-teaser{ color:var(--muted); margin:0; }
 .overlay-details{
-  display:grid; gap:10px;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  display:grid; gap:12px;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
   background:rgba(255,255,255,.05);
   border:1px solid var(--line);
   border-radius:16px;
-  padding:14px;
+  padding:16px;
 }
 .overlay-details .k{ font:700 11px/1 "Space Grotesk"; letter-spacing:.08em; text-transform:uppercase; color:rgba(231,236,245,.7); display:block; margin-bottom:4px; }
 .overlay-details .v{ font-weight:700; color:#e9f1ff; display:block; }
 .overlay-facts h3{ margin:0 0 8px; font:700 16px/1.2 "Space Grotesk"; }
 .overlay-facts ul{ margin:0; padding-left:20px; display:grid; gap:6px; color:#e7ecf5; }
 
-/* Status bar & chips */
+/* Statusbar & chips */
 .statusbar{
   display:flex; justify-content:space-between; align-items:center; gap:12px;
   background:var(--surface-strong);
@@ -263,15 +267,11 @@ html{ scroll-padding-top:96px; }
   .controls{ grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); }
   .control input, .control select{ width:100%; }
   #map{ height:480px; }
-  .map-overlay{
-    top:18px; right:18px; left:18px;
-    width:auto;
-  }
-  .overlay-body{ gap:12px; }
+  .map-overlay{ padding:22px 18px; }
   .modal-grid{ grid-template-columns:repeat(2,1fr); }
 }
 @media (max-width:600px){
   #map{ height:420px; }
-  .map-overlay{ top:14px; right:14px; left:14px; }
+  .map-overlay{ padding:20px 16px; }
   .modal-grid{ grid-template-columns:1fr; }
 }
